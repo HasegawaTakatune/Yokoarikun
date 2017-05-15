@@ -3,21 +3,18 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class Rank : MonoBehaviour {
-	public struct MYDATA{
-		public int difficulty;
-		public 	int yourRank;
-		public int tmpScore;
-		public bool changed;
-	}
-	MYDATA myData;
+	public int difficulty;
+	public 	int yourRank;
+	public int tmpScore;
+	public bool changed;
 	public Text[] Ranking;
 	public Text PlayerRank;
 	public static string RankName;
 	public static bool FromTitle = false;
 	int[] ScoreArray = { 0, 0, 0, 0 };
 	void Init(){
-		myData.difficulty = (int)OnClickButtonSceneManager.difficulty;
-		myData.changed = true;
+		difficulty = (int)OnClickButtonSceneManager.difficulty;
+		changed = true;
 	}
 
 	// Use this for initialization
@@ -31,12 +28,12 @@ public class Rank : MonoBehaviour {
 		}
 	
 		// Save Rank
-		RankName = (myData.difficulty == 1) ? "Normal" : "Hard";
+		RankName = (difficulty == 1) ? "Normal" : "Hard";
 		PlayerRank.gameObject.SetActive (false);
 		// Score Ranking
 		ScoreArray = PlayerPrefsX.GetIntArray (RankName);
 		ScoreArray [3] = ArrayCharracter.Score;
-		myData.tmpScore = ScoreArray [3];
+		tmpScore = ScoreArray [3];
 		Sort ();
 
 		// ランキング表示
@@ -44,14 +41,14 @@ public class Rank : MonoBehaviour {
 			Ranking [i].text = (i + 1).ToString () + "  " + ScoreArray [i].ToString () + "人";
 			// 自分のランキング位置を知らせる
 			if (!FromTitle) {
-				if (ScoreArray [i] == myData.tmpScore && myData.changed) {
+				if (ScoreArray [i] == tmpScore && changed) {
 					if (i >= 3)
 						break;
 					
 					PlayerRank.transform.position = (Ranking [i].transform.position + Vector3.right * 200);
 					Ranking [3].gameObject.SetActive (false);
 					PlayerRank.gameObject.SetActive (true);
-					myData.changed = false;
+					changed = false;
 				} 
 				Ranking [3].text = "あなた " + (ArrayCharracter.Score).ToString () + "人";
 			} else {
