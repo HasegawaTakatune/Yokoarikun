@@ -10,6 +10,17 @@ public class ArrayCharracter : MonoBehaviour {
 	UsingAndroid		= 2,
 	None				= 4;
 
+	byte platform = 0;
+
+	// touch
+	Vector3 touchPosition;
+	Vector3 nowPosition;
+
+	float addPos = 0.5f;
+
+	float RightFrame = 4;
+	float LeftFrame = -4;
+
 	const byte 
 	CUSTOMER_DOWN=0,
 	CUSTOMER_UP=1,
@@ -27,19 +38,6 @@ public class ArrayCharracter : MonoBehaviour {
 	DOWNLEFT = 12;
 
 	const int NORMAL=0,BOXER=1,GUITAR=2;
-
-	byte platform = 0;
-
-	// touch
-	Vector3 touchPosition;
-	Vector3 nowPosition;
-
-	float addPos = 0.5f;
-
-	float RightFrame = 4;
-	float LeftFrame = -4;
-
-
 
 	int moveDirecResult = 0;
 	Vector3[] movePosiResult = new Vector3[8];

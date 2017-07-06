@@ -7,7 +7,6 @@ public class Customers : MonoBehaviour {
 	// Customers Type
 	const byte Boy=0,Boy2=1,Girl=2;
 	const byte OutsideTheArea=0,InArea=1;
-
 	public byte moveStatus = 0;
 	public byte type;
 
@@ -29,7 +28,7 @@ public class Customers : MonoBehaviour {
 	float time = 0;
 
 	Animator animator;
-	public static readonly int[] Direc = new int[] {
+	static readonly int[] Direc = new int[] {
 		// Boy Animator
 		Animator.StringToHash ("CustomersSprite@Down"),
 		Animator.StringToHash ("CustomersSprite@Up"),

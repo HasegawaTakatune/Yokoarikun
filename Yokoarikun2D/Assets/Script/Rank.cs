@@ -3,23 +3,22 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class Rank : MonoBehaviour {
-	public int difficulty;
-	public 	int yourRank;
-	public int tmpScore;
-	public bool changed;
-	public Text[] Ranking;
-	public Text PlayerRank;
+
 	public static string RankName;
-	public static bool FromTitle = false;
+	int difficulty = (int)OnClickButtonSceneManager.difficulty;
+
+	public Text[] Ranking = new Text[3];
+	public Text PlayerRank;
+
 	int[] ScoreArray = { 0, 0, 0, 0 };
-	void Init(){
-		difficulty = (int)OnClickButtonSceneManager.difficulty;
-		changed = true;
-	}
+
+	int yourRank;
+	int tmpScore;
+	bool changed = true;
+	public static bool FromTitle = false;
 
 	// Use this for initialization
 	void Start () {
-		Init ();
 		// ランキングが登録されていなければ
 		if (PlayerPrefsX.GetIntArray ("Normal").Length <= 0 || PlayerPrefsX.GetIntArray ("Hard").Length <= 0) {
 			// ランキングの登録を行う
@@ -29,6 +28,7 @@ public class Rank : MonoBehaviour {
 	
 		// Save Rank
 		RankName = (difficulty == 1) ? "Normal" : "Hard";
+
 		PlayerRank.gameObject.SetActive (false);
 		// Score Ranking
 		ScoreArray = PlayerPrefsX.GetIntArray (RankName);

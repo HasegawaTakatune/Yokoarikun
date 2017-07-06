@@ -2,17 +2,13 @@
 using System.Collections;
 
 public class ArenaIcon : MonoBehaviour {
-	
-		public Vector2 pos;
-		public Vector2 ScPos;
-		public bool flg;
-		public float time;
-
+	Vector2 pos;
+	Vector2 ScPos;
+	bool flg = true;
+	float time = 0;
 	// Use this for initialization
 	void Start () {
 		pos = new Vector2 (transform.position.x, transform.position.y);
-		flg = true;
-		time = 0;
 	}
 	
 	// Update is called once per frame

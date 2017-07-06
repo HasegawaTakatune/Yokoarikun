@@ -99,7 +99,6 @@ public class OnClickButtonSelect : OnClickButton {
 		if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) {
 			ToMakeItOpaque[0].GetComponent<Button> ().Select ();
 		}
-		CollRank = false;
 		GameStatus.stop = false;
 		gameObject.SetActive (false);
 	}

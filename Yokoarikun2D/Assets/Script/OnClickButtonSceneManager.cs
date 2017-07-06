@@ -10,12 +10,16 @@ public class OnClickButtonSceneManager : OnClickButton {
 	public Difficulty setDifficulty;
 	public static Difficulty difficulty;
 
-	public void OnClickSceneManager(){
+	// Use this for initialization
+	void Start () {
 		if (OnClickButtonSelect.CollRank) {
 			SceneName = "Rank";
 			ArrayCharracter.Score = 0;
 			Rank.FromTitle = true;
 		}
+	}
+
+	public void OnClickSceneManager(){
 		GameStatus.stop = false;
 		difficulty = setDifficulty;
 		OnClick ();
