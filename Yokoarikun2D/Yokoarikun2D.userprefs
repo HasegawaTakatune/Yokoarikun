@@ -1,6 +1,6 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\Enemy.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\Result.cs">
     <Files>
       <File FileName="Assets\Script\Customers.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\Enemy.cs" Line="1" Column="1" />
@@ -11,7 +11,7 @@
       <File FileName="Assets\Script\GameStatus.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\ArenaIcon.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\ArrayCharracter.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\OnClickButtonSelect.cs" Line="29" Column="19" />
+      <File FileName="Assets\Script\OnClickButtonSelect.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\OnClickButton.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\OnClickButtonSceneManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\OnClickButtonBackTitle.cs" Line="1" Column="1" />
