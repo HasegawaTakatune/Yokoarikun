@@ -65,11 +65,17 @@ public class Customers : MonoBehaviour {
 	void Update () {
 		if (!GameStatus.stop) {
 			if (Induction) {
+				//********************************************************************************************************
+				//お客さんを数珠繋ぎに誘導する処理部分
+				//指定された座標まで移動をする。
+				//********************************************************************************************************
 				// Move to target
 				angle = Mathf.Atan2 (target.y - transform.position.y, target.x - transform.position.x);
 				if (Vector3.Distance (transform.position, target) >= range) {
 					transform.position += new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * speed;
 				}
+				//********************************************************************************************************
+				//********************************************************************************************************
 			} else {
 				switch(moveStatus){
 

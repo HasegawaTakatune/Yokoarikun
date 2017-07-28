@@ -16,7 +16,7 @@ public class ArrayCharracter : MonoBehaviour {
 	Vector3 touchPosition;
 	Vector3 nowPosition;
 
-	float addPos = 0.5f;
+	float addPos = 0.1f;
 
 	float RightFrame = 4;
 	float LeftFrame = -4;
@@ -79,12 +79,12 @@ public class ArrayCharracter : MonoBehaviour {
 	static readonly int[] Right = new int[] {
 		Animator.StringToHash ("PlayerSprite@Right"),
 		Animator.StringToHash ("PlayerBoxerSprite@Right"),
-		Animator.StringToHash ("PlayerGuitarSprite@Down")
+		Animator.StringToHash ("PlayerGuitarSprite@Right")
 	};
 	static readonly int[] Left = new int[] { 
 		Animator.StringToHash ("PlayerSprite@Left"),
 		Animator.StringToHash ("PlayerBoxerSprite@Left"),
-		Animator.StringToHash ("PlayerGuitarSprite@Down")
+		Animator.StringToHash ("PlayerGuitarSprite@Left")
 	};
 	int type = NORMAL;
 	int direc = 0;
@@ -224,19 +224,23 @@ public class ArrayCharracter : MonoBehaviour {
 				selectMoveDirection (moveDirecResult);
 				moveDirecResult = 0;
 			}
-
+			//********************************************************************************************************
+			//お客さんを数珠繋ぎに誘導する処理部分
+			//先頭のお客さんから順に、どこまで移動するかの座標を指定してあげる
+			//********************************************************************************************************
 			// プレイヤに追尾
 			for (int i = CustomersNum - 1; i >= 0; i--) {
 				// ターゲット座標更新
 				if (move) {
 					if (i != 0) {
+						// 自分の前にいるキャラのステータスを参照する
 						int Direction = myScriptList [i - 1].direction;
 						myScriptList [i].SetAnimator (Direction);
 						myScriptList [i].target = myScriptList [i - 1].target;
 					}
 				}
 			}
-			// 最前列
+			// 最前列にいるお客さんは、プレイヤーのステータスを参照する
 			if (topDelay >= 0.1f) {
 				myScriptList [0].SetAnimator (direc);
 				myScriptList [0].target = tmpTarget;
@@ -244,6 +248,8 @@ public class ArrayCharracter : MonoBehaviour {
 				topDelay = 0;
 			}
 			move = false;
+			//********************************************************************************************************
+			//********************************************************************************************************
 
 			// 到着後の処理
 			if (endPos.y >= nowPosition.y) {
