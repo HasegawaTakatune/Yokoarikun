@@ -11,12 +11,13 @@ public class OnClickButtonSceneManager : OnClickButton {
 	public static Difficulty difficulty;
 
 	// Use this for initialization
-	void Start () {
+	void OnEnable () {
 		if (OnClickButtonSelect.CollRank) {
 			SceneName = "Rank";
 			ArrayCharracter.Score = 0;
 			Rank.FromTitle = true;
-		}
+		} else
+			SceneName = sceneName;
 	}
 
 	public void OnClickSceneManager(){

@@ -11,5 +11,6 @@ public class OnClickButtonBackTitle : OnClickButton {
 		if (Application.platform == RuntimePlatform.WindowsEditor || Application.platform == RuntimePlatform.WindowsPlayer) {
 			gameObject.GetComponent<Button> ().Select ();
 		}
+		SceneName = sceneName;
 	}
 }

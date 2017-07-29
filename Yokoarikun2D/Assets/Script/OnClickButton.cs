@@ -11,7 +11,8 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class OnClickButton : MonoBehaviour {
-	public string SceneName;
+	public string sceneName;
+	protected string SceneName;
 	// Audio
 	public AudioClip audioClip;
 	public AudioSource audioSource;

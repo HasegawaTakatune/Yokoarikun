@@ -32,6 +32,7 @@ public class OnClickButtonSelect : OnClickButton {
 	// スタート
 	public void OnClickStart(){
 		audioSource.PlayOneShot (audioClip);
+		CollRank = false;
 		StartCoroutine ("MoveToSelect");
 	}
 	// ストップ

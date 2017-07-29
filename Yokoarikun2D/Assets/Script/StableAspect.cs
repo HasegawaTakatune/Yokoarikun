@@ -52,6 +52,7 @@ public class StableAspect : MonoBehaviour {
 		// 画面コントロール
 		Screen.autorotateToLandscapeLeft = false;
 		Screen.autorotateToLandscapeRight = false;
+		Screen.autorotateToPortrait = true;
 		Screen.SetResolution ((int)width, (int)height, true);
 	}
 }
