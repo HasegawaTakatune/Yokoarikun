@@ -64,7 +64,6 @@
      <Compile Include="Assets\Script\Spawner.cs" />
      <Compile Include="Assets\Script\StableAspect.cs" />
      <Compile Include="Assets\Script\TimeCount.cs" />
-     <Compile Include="Assets\Script\TitleCanvas.cs" />
      <Compile Include="Assets\Script\UI.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>

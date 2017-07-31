@@ -6,11 +6,10 @@ using UnityEngine.UI;
 public class Result : MonoBehaviour {
 
 	static int score = 0;
-	public GameObject[] SpwawnCust;
+	public GameObject[] customers;
 	public Text ResultText;
-	public string RankScene = "Rank";
-	bool buttonflg = false;
-	Quaternion quaternion = Quaternion.identity;
+	// 集計終わり
+	bool totalEnd = false;
 
 	// Audio
 	public AudioClip DrumRoll;
@@ -19,18 +18,18 @@ public class Result : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		audioSource = gameObject.GetComponent<AudioSource> ();
-		ResultText = GetComponent<Text>();
-		StartCoroutine("ScoreUp");
 		score = 0;
 		ResultText.text = "あつめた人数:" + score;
+		audioSource = gameObject.GetComponent<AudioSource> ();
+		ResultText = GetComponent<Text>();
+		StartCoroutine (ScoreUp ());
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (buttonflg == true) {
+		if (totalEnd) {
 			if (Input.GetKeyDown (KeyCode.Space) || Input.anyKeyDown || Input.touchCount > 0) {
-				SceneManager.LoadScene (RankScene);
+				SceneManager.LoadScene ("Rank");
 			}
 		}
 	}
@@ -44,15 +43,15 @@ public class Result : MonoBehaviour {
 			}
 			if (score != 0) {
 				ResultText.text = "あつめた人数:" + score;
-				Instantiate (SpwawnCust [GameStatus.GetCustomerCount()],//[Mathf.FloorToInt (Random.Range (0, 3))],
+				Instantiate (customers [GameStatus.GetCustomerCount ()],
 					new Vector3 (Random.Range (-3.0f, 3.0f), 
-						Random.Range (-4.5f, 0.5f), -1.0f), 
-					quaternion);
+						Random.Range (-4.5f, 0.5f), score), 
+					Quaternion.identity);
 			}
 			score++;
 			yield return null;
 		}
-		buttonflg = true;
+		totalEnd = true;
 	}
 
 }

@@ -60,16 +60,4 @@ public class GameStatus : MonoBehaviour {
 	//******************************************************************//
 	//******************************************************************//
 
-	// Use this for initialization
-	void Start () {
-		stop = false;
-		Debug.Log (customerCount % 100);
-		Debug.Log ((int)((customerCount%10000)*0.01));
-		Debug.Log ((int)(customerCount*0.0001));
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

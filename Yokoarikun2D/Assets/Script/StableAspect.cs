@@ -11,16 +11,8 @@ public class StableAspect : MonoBehaviour {
 	private float pixelPerUni=100f;
 
 	void Awake(){
-		/*#if UNITY_EDITOR_WIN
-		width = 720f;
-		height = 1280f;
-		#elif UNITY_ANDROID*/
-		width = 720;//Screen.width;
-		height = 1280;//Screen.height;
-		/*#else
-		width = 720f;
-		height = 1280f;
-		#endif*/
+		width = 720;
+		height = 1280;
 
 		float aspect = (float)Screen.height / (float)Screen.width;
 		float bgAcpect = height / width;

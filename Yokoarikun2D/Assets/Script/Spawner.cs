@@ -24,7 +24,7 @@ public class Spawner : MonoBehaviour {
 					new Vector3 ((0 == (Random.Range (0, 2)) ? 5 : -5),Random.Range (MinPosition.y, MaxPosition.y),0),
 					transform.rotation);
 			}
-			// エラーがあったらintervalの時間分待つ
+			// 待ち時間
 			yield return new WaitForSeconds(interval);
 		}
 	}

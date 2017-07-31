@@ -25,17 +25,37 @@ public class Rank : MonoBehaviour {
 			PlayerPrefsX.SetIntArray ("Normal", ScoreArray);
 			PlayerPrefsX.SetIntArray ("Hard", ScoreArray);
 		}
-	
+
+		PlayerRank.gameObject.SetActive (false);
+
 		// Save Rank
 		RankName = (difficulty == 1) ? "Normal" : "Hard";
 
-		PlayerRank.gameObject.SetActive (false);
 		// Score Ranking
 		ScoreArray = PlayerPrefsX.GetIntArray (RankName);
-		ScoreArray [3] = ArrayCharracter.Score;
-		tmpScore = ScoreArray [3];
+		ScoreArray [3] = tmpScore = ArrayCharracter.Score;
+		// ソート
 		Sort ();
+		// ランキング表示
+		ShowRank ();
+	}
 
+	// ソート
+	void Sort(){
+		for (int i = 0; i < 3; i++) {
+			for (int j = i + 1; j < 4; j++) {
+				if (ScoreArray [i] < ScoreArray [j]) {
+					int tmp;
+					tmp = ScoreArray [i];
+					ScoreArray [i] = ScoreArray [j];
+					ScoreArray [j] = tmp;
+				}
+			}
+		}
+		PlayerPrefsX.SetIntArray (RankName, ScoreArray);
+	}
+
+	void ShowRank(){
 		// ランキング表示
 		for (int i = 0; i < ScoreArray.Length - 1; i++) {
 			Ranking [i].text = (i + 1).ToString () + "  " + ScoreArray [i].ToString () + "人";
@@ -44,7 +64,7 @@ public class Rank : MonoBehaviour {
 				if (ScoreArray [i] == tmpScore && changed) {
 					if (i >= 3)
 						break;
-					
+
 					PlayerRank.transform.position = (Ranking [i].transform.position + Vector3.right * 200);
 					Ranking [3].gameObject.SetActive (false);
 					PlayerRank.gameObject.SetActive (true);
@@ -55,21 +75,5 @@ public class Rank : MonoBehaviour {
 				Ranking [3].text = "";
 			}
 		}
-	}
-
-	// ソート
-	void Sort(){
-		for (int Comparison = 0; Comparison < 3; Comparison++) {
-			for (int Source = Comparison + 1; Source < 4; Source++) {
-				if (ScoreArray [Comparison] < ScoreArray [Source]) {
-					int tmp;
-					tmp = ScoreArray [Comparison];
-					ScoreArray [Comparison] = ScoreArray [Source];
-					ScoreArray [Source] = tmp;
-				}
-
-			}
-		}
-		PlayerPrefsX.SetIntArray (RankName, ScoreArray);
 	}
 }
