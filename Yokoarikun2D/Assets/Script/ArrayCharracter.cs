@@ -76,16 +76,12 @@ public class ArrayCharracter : MonoBehaviour {
 		Animator.StringToHash ("PlayerBoxerSprite@Down"),
 		Animator.StringToHash ("PlayerGuitarSprite@Down")
 	};
-	static readonly int[] Right = new int[] {
-		Animator.StringToHash ("PlayerSprite@Right"),
-		Animator.StringToHash ("PlayerBoxerSprite@Right"),
-		Animator.StringToHash ("PlayerGuitarSprite@Right")
-	};
 	static readonly int[] Left = new int[] { 
 		Animator.StringToHash ("PlayerSprite@Left"),
 		Animator.StringToHash ("PlayerBoxerSprite@Left"),
 		Animator.StringToHash ("PlayerGuitarSprite@Left")
 	};
+	SpriteRenderer spriteRenderer;
 	int type = NORMAL;
 	int direc = 0;
 
@@ -129,6 +125,8 @@ public class ArrayCharracter : MonoBehaviour {
 				Mathf.Cos ((transform.localEulerAngles.y + 45 * i) * 3.14f / 180) * speed * (1280 / Screen.height), 0);
 			i++;
 		}
+		// SpriteRenderer
+		spriteRenderer = GetComponent<SpriteRenderer>();
 	}
 
 	// Update is called once per frame
@@ -269,7 +267,7 @@ public class ArrayCharracter : MonoBehaviour {
 				{
 					float angle;
 					angle = Mathf.Atan2 ((endPos.y - 1) - nowPosition.y, endPos.x - nowPosition.x);
-					if (Vector3.Distance (nowPosition, endPos) >= 0) {
+					if (Vector3.Distance (nowPosition, endPos) >= 0.5f) {
 						transform.position += new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * speed;
 					}
 				}
@@ -409,10 +407,12 @@ public class ArrayCharracter : MonoBehaviour {
 
 		case LEFT:
 			animator.Play (Left [type]);
+			spriteRenderer.flipX = false;
 			break;
 
 		case RIGHT:
-			animator.Play (Right [type]);
+			animator.Play (Left [type]);
+			spriteRenderer.flipX = true;
 			break;
 
 		default:

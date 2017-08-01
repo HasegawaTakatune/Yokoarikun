@@ -27,14 +27,16 @@ public class Enemy : MonoBehaviour {
 	bool move = false;
 
 	//Animator
-	Animator animator;
+	//Animator animator;
+	SpriteRenderer spriteRenderer;
 
 	void Awake(){
-		animator = gameObject.GetComponent<Animator> ();
+		//animator = gameObject.GetComponent<Animator> ();
+		spriteRenderer = GetComponent<SpriteRenderer> ();
 	}
 
 	void Start(){
-		difficulty = (byte)OnClickButtonSceneManager.difficulty;
+		difficulty = (byte)GameStatus.difficulty;
 		position = transform.position;
 		pos.x = transform.position.x;
 	}
@@ -160,13 +162,13 @@ public class Enemy : MonoBehaviour {
 		}
 		type = Mathf.FloorToInt (Random.Range (0, 2));										// 行動パターン
 		direction = (Mathf.FloorToInt (Random.Range (0, 2))) == 0 ? 1 : -1;					// 初期方向
-		speed = (Mathf.FloorToInt (Random.Range (1, 2))) + (0.015f * ArrayCharracter.Score);	// スピード
+		speed = (Mathf.FloorToInt (Random.Range (1, 2))) + (0.015f * ArrayCharracter.Score);// スピード　スコアによって速度が上がる
 		transform.position = new Vector3 (pos.x * direction, position.y + y, position.z);	// 初期位置
 		SetDirection = (direction == 1) ? false : true;										// 
-		animator.SetBool ("Direction", SetDirection);										//
+		spriteRenderer.flipX = SetDirection;												// 向きの変換
 		RemoveAllCustomers ();																// お客さんを開放
 		reSpawnTimer = Random.Range (0, 3);													// 
-		Debug.Log("Watching speed:"+speed);
+		//Debug.Log("Watching speed:"+speed);
 	}
 
 	// お客さんの奪取

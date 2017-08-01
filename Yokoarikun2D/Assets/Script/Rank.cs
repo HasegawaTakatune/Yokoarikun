@@ -5,7 +5,7 @@ using System.Collections;
 public class Rank : MonoBehaviour {
 
 	public static string RankName;
-	int difficulty = (int)OnClickButtonSceneManager.difficulty;
+	int difficulty = (int)GameStatus.difficulty;
 
 	public Text[] Ranking = new Text[3];
 	public Text PlayerRank;

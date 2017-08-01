@@ -5,6 +5,11 @@ public class GameStatus : MonoBehaviour {
 
 	static public bool stop;
 
+	// ゲーム難易度
+	public enum Difficulty : byte {None,Normal,Hard}
+	static Difficulty _difficulty;
+	public static Difficulty difficulty{ get { return _difficulty; } set { _difficulty = value; } }
+
 	//******************************************************************//
 	//			各種お客さんごとの獲得数の保存と吐き出し					//
 	//******************************************************************//

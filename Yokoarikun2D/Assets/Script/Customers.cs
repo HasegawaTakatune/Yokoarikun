@@ -13,7 +13,6 @@ public class Customers : MonoBehaviour {
 	public int CustomerNumber;
 	public ArrayCharracter player;
 	Enemy enemy;
-	//public bool active=true;
 	public bool Induction = true;
 	bool hit = false;
 
@@ -22,29 +21,29 @@ public class Customers : MonoBehaviour {
 	float speed =0.05f;
 	float range = 0.05f;
 	public int direction = 0;
+	const int Down = 0, Up = 1, Right = 2, Left = 3;
 
 	Vector3[] movePosiResult = new Vector3[8];
 	int Angle = 0;
 	float time = 0;
 
 	Animator animator;
-	static readonly int[] Direc = new int[] {
-		// Boy Animator
+	static readonly int[] DOWN = new int[] {
 		Animator.StringToHash ("CustomersSprite@Down"),
-		Animator.StringToHash ("CustomersSprite@Up"),
-		Animator.StringToHash ("CustomersSprite@Right"),
-		Animator.StringToHash ("CustomersSprite@Left"),
-		// Boy2 Animator
 		Animator.StringToHash ("CustomersBoySprite@Down"),
-		Animator.StringToHash ("CustomersBoySprite@Up"),
-		Animator.StringToHash ("CustomersBoySprite@Right"),
-		Animator.StringToHash ("CustomersBoySprite@Left"),
-		// Girl Animator
-		Animator.StringToHash ("CustomersGirlSprite@Down"),
-		Animator.StringToHash ("CustomersGirlSprite@Up"),
-		Animator.StringToHash ("CustomersGirlSprite@Right"),
-		Animator.StringToHash ("CustomersGirlSprite@Left")
+		Animator.StringToHash ("CustomersGirlSprite@Down")
 	};
+	static readonly int[] UP = new int[] {
+		Animator.StringToHash ("CustomersSprite@Up"),
+		Animator.StringToHash ("CustomersBoySprite@Up"),
+		Animator.StringToHash ("CustomersGirlSprite@Up")
+	};
+	static readonly int[] RIGHT = new int[] {
+		Animator.StringToHash ("CustomersSprite@Right"),
+		Animator.StringToHash ("CustomersBoySprite@Right"),
+		Animator.StringToHash ("CustomersGirlSprite@Right")
+	};
+	SpriteRenderer spriteRenderer;
 
 	void Awake(){
 		// アニメーター取得
@@ -52,6 +51,7 @@ public class Customers : MonoBehaviour {
 	}
 
 	void Start(){
+		spriteRenderer = GetComponent<SpriteRenderer> ();
 		GenderDetermination ();
 		int i = 0;
 		while (movePosiResult.Length != i) {
@@ -124,9 +124,22 @@ public class Customers : MonoBehaviour {
 	// change Animetion
 	public void SetAnimator(int direc){
 		direction = direc;
-		if (type == Boy2)direc += 4;
-		else if (type == Girl)direc += 8;
-		animator.Play (Direc [direc]);
+		switch (direc) {
+		case Down:
+			animator.Play (DOWN [type]);
+			break;
+		case Up:
+			animator.Play (UP [type]);
+			break;
+		case Right:
+			animator.Play (RIGHT [type]);
+			spriteRenderer.flipX = false;
+			break;
+		case Left:
+			animator.Play (RIGHT [type]);
+			spriteRenderer.flipX = true;
+			break;
+		}
 	}
 
 	public void KillMe(){

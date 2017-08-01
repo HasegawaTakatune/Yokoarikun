@@ -21,8 +21,8 @@ public class GameCanvas : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		TimeLimit = (OnClickButtonSceneManager.difficulty == OnClickButtonSceneManager.Difficulty.Normal) ? 50 : 100;
-		TimeToCleanUpText = (OnClickButtonSceneManager.difficulty == OnClickButtonSceneManager.Difficulty.Normal) ? 48 : 98;
+		TimeLimit = (GameStatus.difficulty == GameStatus.Difficulty.Normal) ? 50 : 100;
+		TimeToCleanUpText = (GameStatus.difficulty == GameStatus.Difficulty.Normal) ? 48 : 98;
 		CreateTime = (int)TimeLimit;
 	}
 

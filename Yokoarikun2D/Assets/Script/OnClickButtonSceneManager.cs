@@ -6,9 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class OnClickButtonSceneManager : OnClickButton {
 
-	public enum Difficulty : byte {None,Normal,Hard}
-	public Difficulty setDifficulty;
-	public static Difficulty difficulty;
+	public GameStatus.Difficulty setDifficulty;
 
 	// Use this for initialization
 	void OnEnable () {
@@ -22,7 +20,7 @@ public class OnClickButtonSceneManager : OnClickButton {
 
 	public void OnClickSceneManager(){
 		GameStatus.stop = false;
-		difficulty = setDifficulty;
+		GameStatus.difficulty = setDifficulty;
 		OnClick ();
 	}
 

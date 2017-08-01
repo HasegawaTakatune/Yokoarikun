@@ -56,7 +56,6 @@
      <Compile Include="Assets\Script\OnClickButtonBackTitle.cs" />
      <Compile Include="Assets\Script\OnClickButtonSceneManager.cs" />
      <Compile Include="Assets\Script\OnClickButtonSelect.cs" />
-     <Compile Include="Assets\Script\OnClickButtonStop.cs" />
      <Compile Include="Assets\Script\PlayerPrefsX.cs" />
      <Compile Include="Assets\Script\Rank.cs" />
      <Compile Include="Assets\Script\Result.cs" />
