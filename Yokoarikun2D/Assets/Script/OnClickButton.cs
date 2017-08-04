@@ -26,7 +26,7 @@ public class OnClickButton : MonoBehaviour {
 	
 	// Button Click
 	public void OnClick(){
-		//audioSource.PlayOneShot (audioClip);
+		audioSource.PlayOneShot (audioClip);
 		StartCoroutine ("MoveToScene");
 	}
 

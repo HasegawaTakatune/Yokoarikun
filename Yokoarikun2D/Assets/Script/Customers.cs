@@ -59,6 +59,7 @@ public class Customers : MonoBehaviour {
 				Mathf.Cos ((transform.localEulerAngles.y + 45 * i) * 3.14f / 180) * 0.02f, 0);
 			i++;
 		}
+		SetAnimator (0);
 	}
 	
 	// Update is called once per frame
@@ -77,20 +78,18 @@ public class Customers : MonoBehaviour {
 				//********************************************************************************************************
 				//********************************************************************************************************
 			} else {
-				switch(moveStatus){
+				switch (moveStatus) {
 
 				case InArea:
 				// ランダム移動
 					time -= Time.deltaTime;
-					if (time <= 1) {
-					SetAnimator (0);
-					transform.position += movePosiResult [Angle];
-					} 
 					if (time <= 0) {
 						Angle = (Random.Range (0, 8));
 						time = Random.Range (1, 3);
 						if (3 < transform.position.x || transform.position.x < -3)
 							moveStatus = OutsideTheArea;
+					}else if (time <= 1) {
+						transform.position += movePosiResult [Angle];
 					}
 					break;
 
@@ -102,8 +101,6 @@ public class Customers : MonoBehaviour {
 						transform.position += movePosiResult [2];
 					else
 						moveStatus = InArea;
-					
-					SetAnimator (0);
 					break;
 				}
 			}

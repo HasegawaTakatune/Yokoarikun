@@ -113,9 +113,7 @@ public class ArrayCharracter : MonoBehaviour {
 		audioSource.clip = audioClip;
 		//
 		Score = 0;
-		CustomersNum = myScriptList.Count;
-		myListNum = myScriptList.Count;
-		maxCustomersNum = myScriptList.Count;
+		CustomersNum = myListNum = maxCustomersNum = myScriptList.Count;
 		startPos = StartPosition.transform.position;
 		endPos = EndPosition.transform.position;
 
@@ -127,6 +125,8 @@ public class ArrayCharracter : MonoBehaviour {
 		}
 		// SpriteRenderer
 		spriteRenderer = GetComponent<SpriteRenderer>();
+
+		StartCoroutine (ManualAnimation ());
 	}
 
 	// Update is called once per frame
@@ -138,15 +138,13 @@ public class ArrayCharracter : MonoBehaviour {
 			if (platform == UsingAndroid) {
 				if (Input.touchCount > 0) {
 					foreach (Touch t in Input.touches) {
-						if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled) {
+						if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled)
 							touchPosition = Camera.main.ScreenToWorldPoint (t.position);
-						} else {
-							touchPosition = nowPosition;
-						}
+						else
+							touchPosition = nowPosition;						
 					}
-				} else {
-					touchPosition = nowPosition;
-				}
+				} else
+					touchPosition = nowPosition;				
 			}
 
 			// 移動
@@ -266,7 +264,7 @@ public class ArrayCharracter : MonoBehaviour {
 				// 自動ゴール
 				{
 					float angle;
-					angle = Mathf.Atan2 ((endPos.y - 1) - nowPosition.y, endPos.x - nowPosition.x);
+					angle = Mathf.Atan2 (endPos.y - nowPosition.y, endPos.x - nowPosition.x);
 					if (Vector3.Distance (nowPosition, endPos) >= 0.5f) {
 						transform.position += new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * speed;
 					}
@@ -313,9 +311,7 @@ public class ArrayCharracter : MonoBehaviour {
 					}
 					Create = false;
 				}
-
-				transform.position -= new Vector3 (Mathf.Sin ((transform.localEulerAngles.y + 180) * 3.14f / 180) * 0.2f, 
-					Mathf.Cos (transform.localEulerAngles.y * 3.14f / 180) * 0.1f, 0);
+				transform.position += movePosiResult [4];
 
 				AddScore = false;
 				touchPosition = new Vector3 (nowPosition.x, -10, 0);
@@ -386,8 +382,9 @@ public class ArrayCharracter : MonoBehaviour {
 
 	// ターゲット位置の更新
 	void UpdateTarget(){
-		delay += Time.deltaTime;
-		topDelay += Time.deltaTime;
+		float time = Time.deltaTime;
+		delay += time;
+		topDelay += time;
 		if (delay >= 0.3f) {
 			move = true;
 			delay = 0;
@@ -418,6 +415,14 @@ public class ArrayCharracter : MonoBehaviour {
 		default:
 			//Debug.Log ("Errer");
 			break;
+		}
+	}
+
+	IEnumerator ManualAnimation(){
+		while(true){
+			yield return new WaitForSeconds (.3f);
+			if (playerDirection == UP || playerDirection == DOWN)
+				spriteRenderer.flipX = !spriteRenderer.flipX;
 		}
 	}
 
