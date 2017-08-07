@@ -5,6 +5,7 @@ public class ArenaIcon : MonoBehaviour {
 	Vector2 pos;
 	Vector2 ScPos;
 	bool flg = true;
+	const float speed = 0.5f;
 
 	// Use this for initialization
 	void Start () {
@@ -15,7 +16,7 @@ public class ArenaIcon : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		pos.y += (flg) ? 0.5f : -0.5f;
+		pos.y += (flg) ? speed : -speed;
 		transform.position = pos;
 
 		ScPos = Camera.main.ScreenToWorldPoint (pos);

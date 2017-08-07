@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class GameCanvas : MonoBehaviour {
 
-	public ArrayCharracter player;
-
 	public Text TimeLimitText;
 	public Text EndText;
 	public Text StartCountText;
@@ -15,9 +13,8 @@ public class GameCanvas : MonoBehaviour {
 	public float TimeToCleanUpText;
 	public float TimeLimit;
 	public float startCount=4;
-	public string RankScene = "Result";
+	public const string RankScene = "Result";
 	int CreateTime;
-	bool GameStart = false;
 
 	// Use this for initialization
 	void Start () {
@@ -29,7 +26,7 @@ public class GameCanvas : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (!GameStatus.stop) {
-			if (GameStart) {
+			if (GameStatus.start) {
 				GameTimer ();
 				ScoreText.text = "アリーナ:" + ArrayCharracter.Score.ToString () + "人";
 			} else {
@@ -42,7 +39,7 @@ public class GameCanvas : MonoBehaviour {
 	void GameTimer(){
 		if (CreateTime < 0) {
 			EndText.text = "しゅうりょう";
-			player.Controller (false);
+			GameStatus.start = false;
 			if (CreateTime <= (-3)) {
 				Rank.FromTitle = false;
 				SceneManager.LoadScene (RankScene);
@@ -66,11 +63,11 @@ public class GameCanvas : MonoBehaviour {
 		CreateTime = Mathf.FloorToInt (startCount);
 		if (CreateTime >= 1) {
 			StartCountText.text = CreateTime.ToString ();
+			GameStatus.start = false;
 		} else {
 			StartCountText.text = "すたーと!!";
 			CreateTime = (int)TimeLimit;
-			player.Controller (true);
-			GameStart = true;
+			GameStatus.start = true;
 		}
 	}
 }

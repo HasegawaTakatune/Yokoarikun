@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
-//using System;
+using Const;
 
 public class Customers : MonoBehaviour {
 
 	// Customers Type
-	const byte Boy=0,Boy2=1,Girl=2;
 	const byte OutsideTheArea=0,InArea=1;
 	public byte moveStatus = 0;
 	public byte type;
@@ -18,10 +17,9 @@ public class Customers : MonoBehaviour {
 
 	public Vector3 target = new Vector3 (0, 6, 0);
 	float angle;
-	float speed =0.05f;
-	float range = 0.05f;
-	public int direction = 0;
-	const int Down = 0, Up = 1, Right = 2, Left = 3;
+	const float speed =0.05f;
+	const float range = 0.05f;
+	public byte direction = 0;
 
 	Vector3[] movePosiResult = new Vector3[8];
 	int Angle = 0;
@@ -119,20 +117,20 @@ public class Customers : MonoBehaviour {
 	}
 
 	// change Animetion
-	public void SetAnimator(int direc){
+	public void SetAnimator(byte direc){
 		direction = direc;
 		switch (direc) {
-		case Down:
+		case Key.DOWN:
 			animator.Play (DOWN [type]);
 			break;
-		case Up:
+		case Key.UP:
 			animator.Play (UP [type]);
 			break;
-		case Right:
+		case Key.RIGHT:
 			animator.Play (RIGHT [type]);
 			spriteRenderer.flipX = false;
 			break;
-		case Left:
+		case Key.LEFT:
 			animator.Play (RIGHT [type]);
 			spriteRenderer.flipX = true;
 			break;

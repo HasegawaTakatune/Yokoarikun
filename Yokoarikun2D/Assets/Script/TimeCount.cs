@@ -35,7 +35,7 @@ public class TimeCount: MonoBehaviour {
 	void GameTimer(){
 		if (CreateTime < 0) {
 			EndText.text = "しゅうりょう";
-			player.Controller (false);
+			GameStatus.start = false;
 			if (CreateTime <= (-3)) {
 				Rank.FromTitle = false;
 				SceneManager.LoadScene (RankScene);
@@ -62,7 +62,7 @@ public class TimeCount: MonoBehaviour {
 		} else {
 			StartCountText.text = "すたーと!!";
 			CreateTime = (int)TimeLimit;
-			player.Controller (true);
+			GameStatus.start = true;
 			GameStart = true;
 		}
 	}

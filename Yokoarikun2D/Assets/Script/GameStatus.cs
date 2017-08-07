@@ -3,7 +3,10 @@ using System.Collections;
 
 public class GameStatus : MonoBehaviour {
 
-	static public bool stop;
+	public static bool stop;
+
+	static bool _start = false;
+	public static bool start{ get { return _start; } set { _start = value; } }
 
 	// ゲーム難易度
 	public enum Difficulty : byte {None,Normal,Hard}
@@ -65,4 +68,26 @@ public class GameStatus : MonoBehaviour {
 	//******************************************************************//
 	//******************************************************************//
 
+}
+
+namespace Const{
+	public static class Key{
+		public const byte 
+		UP = 1,
+		RIGHT = 2,
+		DOWN = 4,
+		LEFT = 8,
+		UPRIGHT = 3,
+		DOWNRIGHT = 6,
+		UPLEFT = 9,
+		DOWNLEFT = 12;
+	}
+
+	public static class Platform{
+		public const byte
+		UnityEditor	= 0,
+		Windows		= 1,
+		Android		= 2,
+		None		= 4;
+	}
 }

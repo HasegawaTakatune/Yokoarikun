@@ -37,7 +37,7 @@ public class OnClickButtonSelect : OnClickButton {
 	}
 	// ストップ
 	public void OnClickStop(){
-		if (ArrayCharracter.start) {
+		if (GameStatus.start) {
 			audioSource.PlayOneShot (audioClip);
 			GameStatus.stop = true;
 			StartCoroutine ("MoveToSelectStop");

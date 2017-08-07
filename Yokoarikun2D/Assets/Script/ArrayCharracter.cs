@@ -1,15 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Const;
 
 public class ArrayCharracter : MonoBehaviour {
-	// Enum Platform
-	const byte 
-	UsingUnityEditor 	= 0,
-	UsingWindows		= 1,
-	UsingAndroid		= 2,
-	None				= 4;
-
+	// Use platform
 	byte platform = 0;
 
 	// touch
@@ -20,22 +15,6 @@ public class ArrayCharracter : MonoBehaviour {
 
 	float RightFrame = 4;
 	float LeftFrame = -4;
-
-	const byte 
-	CUSTOMER_DOWN=0,
-	CUSTOMER_UP=1,
-	CUSTOMER_RIGHT=2,
-	CUSTOMER_LEFT=3;
-
-	const byte 
-	UP = 1,
-	RIGHT = 2,
-	DOWN = 4,
-	LEFT = 8,
-	UPRIGHT = 3,
-	DOWNRIGHT = 6,
-	UPLEFT = 9,
-	DOWNLEFT = 12;
 
 	const int NORMAL=0,BOXER=1,GUITAR=2;
 
@@ -65,7 +44,7 @@ public class ArrayCharracter : MonoBehaviour {
 
 	// Animator
 	Animator animator;
-	byte playerDirection = DOWN;
+	byte playerDirection = Key.DOWN;
 	static readonly int[] Up = new int[] { 
 		Animator.StringToHash ("PlayerSprite@Up"),
 		Animator.StringToHash ("PlayerBoxerSprite@Up"),
@@ -82,13 +61,12 @@ public class ArrayCharracter : MonoBehaviour {
 		Animator.StringToHash ("PlayerGuitarSprite@Left")
 	};
 	SpriteRenderer spriteRenderer;
-	int type = NORMAL;
-	int direc = 0;
+	byte type = NORMAL;
+	byte direc = 0;
 
-	public float speed = 1.0f;
+	public const float speed = 0.05f;
 	float delay=0;
 	float topDelay=0;
-	static public bool start = false;
 	bool move = true;
 
 	void Awake(){
@@ -100,13 +78,13 @@ public class ArrayCharracter : MonoBehaviour {
 
 		// 今使っているプラットホーム
 		if (Application.platform == RuntimePlatform.WindowsEditor) {
-			platform = UsingUnityEditor;
+			platform = Platform.UnityEditor;
 		} else if (Application.platform == RuntimePlatform.WindowsPlayer) {
-			platform = UsingWindows;
+			platform = Platform.Windows;
 		} else if (Application.platform == RuntimePlatform.Android) {
-			platform = UsingAndroid;
+			platform = Platform.Android;
 		} else {
-			platform = None;
+			platform = Platform.None;
 		}
 		// Audio
 		audioSource = gameObject.GetComponent<AudioSource> ();
@@ -134,89 +112,87 @@ public class ArrayCharracter : MonoBehaviour {
 		if (!GameStatus.stop) {
 			nowPosition = gameObject.transform.position;
 
-			// タッチした座標
-			if (platform == UsingAndroid) {
-				if (Input.touchCount > 0) {
-					foreach (Touch t in Input.touches) {
-						if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled)
-							touchPosition = Camera.main.ScreenToWorldPoint (t.position);
-						else
-							touchPosition = nowPosition;						
-					}
-				} else
-					touchPosition = nowPosition;				
-			}
-
 			// 移動
-			if (start && !AddScore) {
-				if (platform == UsingAndroid) {
+			if (GameStatus.start && !AddScore) {
+				if (platform == Platform.Android){
 					// Android
+					// タッチした座標
+					if (Input.touchCount > 0) {
+						foreach (Touch t in Input.touches) {
+							if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled)
+								touchPosition = Camera.main.ScreenToWorldPoint (t.position);
+							else
+								touchPosition = nowPosition;			
+						}
+					} else
+						touchPosition = nowPosition;
+
 					if ((nowPosition.y) < (touchPosition.y - addPos)) {
 						if (nowPosition.y < startPos.y - 1.1f) {
-							moveDirecResult += UP;
-							direc = CUSTOMER_UP;
+							moveDirecResult += Key.UP;
+							direc = Key.UP;
 							UpdateTarget ();
 						}
-						playerDirection = UP;
+						playerDirection = Key.UP;
 					}
 					if ((nowPosition.y) > (touchPosition.y + addPos)) {
-						moveDirecResult += DOWN;
-						playerDirection = DOWN;
-						direc = CUSTOMER_DOWN;
+						moveDirecResult += Key.DOWN;
+						playerDirection = Key.DOWN;
+						direc = Key.DOWN;
 						UpdateTarget ();
 					}
 					if ((nowPosition.x) > (touchPosition.x + addPos)) {
 						if (nowPosition.x > LeftFrame) {// 移動制限 
-							moveDirecResult += LEFT;
-							playerDirection = LEFT;
-							direc = CUSTOMER_LEFT;
+							moveDirecResult += Key.LEFT;
+							playerDirection = Key.LEFT;
+							direc = Key.LEFT;
 							UpdateTarget ();
 						}
 					}
 					if ((nowPosition.x) < (touchPosition.x - addPos)) {
 						if (nowPosition.x < RightFrame) {
-							moveDirecResult += RIGHT;
-							playerDirection = RIGHT;
-							direc = CUSTOMER_RIGHT;
+							moveDirecResult += Key.RIGHT;
+							playerDirection = Key.RIGHT;
+							direc = Key.RIGHT;
 							UpdateTarget ();
 						}
 					}
-				} else if (platform == UsingUnityEditor || platform == UsingWindows) {
+				} else if (platform == Platform.UnityEditor || platform == Platform.Windows){
 					// Windows:UnityEditor
 					if (Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) {
 						if (nowPosition.y < startPos.y - 1.1f) {
-							moveDirecResult += UP;
-							direc = CUSTOMER_UP;
+							moveDirecResult += Key.UP;
+							direc = Key.UP;
 							UpdateTarget ();
 						}
-						playerDirection = UP;
+						playerDirection = Key.UP;
 					}
 					if (Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.DownArrow)) {
-						moveDirecResult += DOWN;
-						playerDirection = DOWN;
-						direc = CUSTOMER_DOWN;
+						moveDirecResult += Key.DOWN;
+						playerDirection = Key.DOWN;
+						direc = Key.DOWN;
 						UpdateTarget ();
 					}
 					if (Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) {
 						if (nowPosition.x > LeftFrame) {// 移動制限 
-							moveDirecResult += LEFT;
-							direc = CUSTOMER_LEFT;
+							moveDirecResult += Key.LEFT;
+							direc = Key.LEFT;
 							UpdateTarget ();
 						}
-						playerDirection = LEFT;
+						playerDirection = Key.LEFT;
 					}
 					if (Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) {
 						if (nowPosition.x < RightFrame) {
-							moveDirecResult += RIGHT;
-							direc = CUSTOMER_RIGHT;
+							moveDirecResult += Key.RIGHT;
+							direc = Key.RIGHT;
 							UpdateTarget ();
 						}
-						playerDirection = RIGHT;
+						playerDirection = Key.RIGHT;
 					}
 				}
 
 				// アニメーション設定
-				changeAnimation (type, playerDirection);
+				changeAnimation (type, direc);//playerDirection);
 				selectMoveDirection (moveDirecResult);
 				moveDirecResult = 0;
 			}
@@ -230,8 +206,8 @@ public class ArrayCharracter : MonoBehaviour {
 				if (move) {
 					if (i != 0) {
 						// 自分の前にいるキャラのステータスを参照する
-						int Direction = myScriptList [i - 1].direction;
-						myScriptList [i].SetAnimator (Direction);
+						//int Direction = myScriptList [i - 1].direction;
+						myScriptList [i].SetAnimator (myScriptList [i - 1].direction);//(Direction);
 						myScriptList [i].target = myScriptList [i - 1].target;
 					}
 				}
@@ -280,8 +256,8 @@ public class ArrayCharracter : MonoBehaviour {
 				Create = true;
 				touchPosition = new Vector3 (nowPosition.x, -10, 0);
 				// Set direction
-				playerDirection = DOWN;
-				direc = CUSTOMER_DOWN;
+				playerDirection = Key.DOWN;
+				direc = Key.DOWN;
 				UpdateTarget ();
 			}
 
@@ -319,8 +295,8 @@ public class ArrayCharracter : MonoBehaviour {
 				for (int i = CustomersNum - 1; i >= 0; i--) {
 					// ターゲット座標更新
 					if (i != 0) {
-						int Direction = myScriptList [i - 1].direction;
-						myScriptList [i].SetAnimator (Direction);
+						//byte Direction = myScriptList [i - 1].direction;
+						myScriptList [i].SetAnimator (myScriptList [i - 1].direction);//Direction);
 						myScriptList [i].target = myScriptList [i - 1].target;
 					}
 				}
@@ -328,8 +304,8 @@ public class ArrayCharracter : MonoBehaviour {
 				myScriptList [0].target = tmpTarget;
 				tmpTarget = nowPosition;
 				// Set direction
-				playerDirection = DOWN;
-				direc = CUSTOMER_DOWN;
+				playerDirection = Key.DOWN;
+				direc = Key.DOWN;
 				UpdateTarget ();
 			}
 		}
@@ -375,11 +351,6 @@ public class ArrayCharracter : MonoBehaviour {
 		}
 	}
 
-	// プレイヤの操作制御
-	public void Controller(bool flg){
-		start = flg;
-	}
-
 	// ターゲット位置の更新
 	void UpdateTarget(){
 		float time = Time.deltaTime;
@@ -394,20 +365,20 @@ public class ArrayCharracter : MonoBehaviour {
 	// アニメーション変更
 	void changeAnimation(int type,byte direction){
 		switch (direction) {
-		case DOWN:
+		case Key.DOWN:
 			animator.Play (Down [type]);
 			break;
 
-		case UP:
+		case Key.UP:
 			animator.Play (Up [type]);
 			break;
 
-		case LEFT:
+		case Key.LEFT:
 			animator.Play (Left [type]);
 			spriteRenderer.flipX = false;
 			break;
 
-		case RIGHT:
+		case Key.RIGHT:
 			animator.Play (Left [type]);
 			spriteRenderer.flipX = true;
 			break;
@@ -421,7 +392,7 @@ public class ArrayCharracter : MonoBehaviour {
 	IEnumerator ManualAnimation(){
 		while(true){
 			yield return new WaitForSeconds (.3f);
-			if (playerDirection == UP || playerDirection == DOWN)
+			if (playerDirection == Key.UP || playerDirection == Key.DOWN)
 				spriteRenderer.flipX = !spriteRenderer.flipX;
 		}
 	}
@@ -448,35 +419,35 @@ public class ArrayCharracter : MonoBehaviour {
 	void selectMoveDirection(int direction){
 		Vector3 move = Vector3.zero;
 		switch (direction) {
-		case UP:
+		case Key.UP:
 			move += movePosiResult [0];
 			break;
 
-		case UPRIGHT:
+		case Key.UPRIGHT:
 			move += movePosiResult [1];
 			break;
 
-		case RIGHT:
+		case Key.RIGHT:
 			move += movePosiResult [2];
 			break;
 
-		case DOWNRIGHT:
+		case Key.DOWNRIGHT:
 			move += movePosiResult [3];
 			break;
 
-		case DOWN:
+		case Key.DOWN:
 			move += movePosiResult [4];
 			break;
 
-		case DOWNLEFT:
+		case Key.DOWNLEFT:
 			move += movePosiResult [5];
 			break;
 
-		case LEFT:
+		case Key.LEFT:
 			move += movePosiResult [6];
 			break;
 		
-		case UPLEFT:
+		case Key.UPLEFT:
 			move += movePosiResult [7];
 			break;
 

@@ -2,13 +2,13 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\ArrayCharracter.cs">
     <Files>
-      <File FileName="Assets\Script\Customers.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\ArrayCharracter.cs" Line="423" Column="39" />
+      <File FileName="Assets\Script\Customers.cs" Line="120" Column="31" />
+      <File FileName="Assets\Script\ArrayCharracter.cs" Line="299" Column="69" />
       <File FileName="Assets\Script\TimeCount.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\Result.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\GameStatus.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\Rank.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\GameCanvas.cs" Line="1" Column="1" />
+      <File FileName="Assets\Script\Rank.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\OnClickButtonSceneManager.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\OnClickButtonSelect.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\OnClickButton.cs" Line="1" Column="1" />
