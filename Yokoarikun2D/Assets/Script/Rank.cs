@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using Const;
 
 public class Rank : MonoBehaviour {
 
 	public static string RankName;
-	int difficulty = (int)GameStatus.difficulty;
+	int difficulty = (int)Game.difficulty;
 
 	public Text[] Ranking = new Text[3];
 	public Text PlayerRank;
@@ -33,7 +34,7 @@ public class Rank : MonoBehaviour {
 
 		// Score Ranking
 		ScoreArray = PlayerPrefsX.GetIntArray (RankName);
-		ScoreArray [3] = tmpScore = ArrayCharracter.Score;
+		ScoreArray [3] = tmpScore = Game.score;
 		// ソート
 		Sort ();
 		// ランキング表示
@@ -70,7 +71,7 @@ public class Rank : MonoBehaviour {
 					PlayerRank.gameObject.SetActive (true);
 					changed = false;
 				} 
-				Ranking [3].text = "あなた " + (ArrayCharracter.Score).ToString () + "人";
+				Ranking [3].text = "あなた " + (Game.score).ToString () + "人";
 			} else {
 				Ranking [3].text = "";
 			}

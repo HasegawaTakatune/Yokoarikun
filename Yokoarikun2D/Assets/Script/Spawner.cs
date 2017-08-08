@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Const;
 
 public class Spawner : MonoBehaviour {
 	const byte DOWN = 0;
@@ -15,7 +16,7 @@ public class Spawner : MonoBehaviour {
 
 		SpawnCharScript.Induction = false;
 		while (true) {
-			if (!GameStatus.stop) {
+			if (!Game.stop) {
 				// Set Sprite and Animator
 				SpawnCharScript.type = (byte)Mathf.Floor (Random.Range (0, 3));
 				// Spawn

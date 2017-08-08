@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Const;
 
 public class Result : MonoBehaviour {
 
@@ -36,8 +37,8 @@ public class Result : MonoBehaviour {
 
 	IEnumerator ScoreUp(){
 		score = 0;
-		while (score <= ArrayCharracter.Score) {
-			if (score >= (ArrayCharracter.Score - 1)) {
+		while (score <= Game.score) {
+			if (score >= (Game.score - 1)) {
 				audioSource.Stop ();
 				audioSource.PlayOneShot (DrumEnd);
 			}

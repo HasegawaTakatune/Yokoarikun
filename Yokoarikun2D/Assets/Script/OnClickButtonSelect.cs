@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Const;
 
 public class OnClickButtonSelect : OnClickButton {
 
@@ -37,9 +38,9 @@ public class OnClickButtonSelect : OnClickButton {
 	}
 	// ストップ
 	public void OnClickStop(){
-		if (GameStatus.start) {
+		if (Game.start) {
 			audioSource.PlayOneShot (audioClip);
-			GameStatus.stop = true;
+			Game.stop = true;
 			StartCoroutine ("MoveToSelectStop");
 		}
 	}
@@ -100,7 +101,7 @@ public class OnClickButtonSelect : OnClickButton {
 		if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor) {
 			ToMakeItOpaque[0].GetComponent<Button> ().Select ();
 		}
-		GameStatus.stop = false;
+		Game.stop = false;
 		gameObject.SetActive (false);
 	}
 }

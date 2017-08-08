@@ -62,15 +62,15 @@ public class Customers : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!GameStatus.stop) {
+		if (!Game.stop) {
 			if (Induction) {
 				//********************************************************************************************************
 				//お客さんを数珠繋ぎに誘導する処理部分
 				//指定された座標まで移動をする。
 				//********************************************************************************************************
 				// Move to target
-				angle = Mathf.Atan2 (target.y - transform.position.y, target.x - transform.position.x);
 				if (Vector3.Distance (transform.position, target) >= range) {
+					angle = Mathf.Atan2 (target.y - transform.position.y, target.x - transform.position.x);
 					transform.position += new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * speed;
 				}
 				//********************************************************************************************************
@@ -141,13 +141,11 @@ public class Customers : MonoBehaviour {
 		Destroy (gameObject);
 	}
 
-	// 性別決定
-	public void GenderDetermination(){
+	public void GenderDetermination (){
+		// 性別決定
 		type = (byte)Mathf.Floor (Random.Range (0, 3));
 	}
 
-	public void SetPosition(Vector3 input){
-		transform.position = input;
-	}
+	public Vector3 Position{ set { transform.position = value; } }
 
 }

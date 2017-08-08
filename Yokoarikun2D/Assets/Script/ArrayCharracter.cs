@@ -11,7 +11,7 @@ public class ArrayCharracter : MonoBehaviour {
 	Vector3 touchPosition;
 	Vector3 nowPosition;
 
-	float addPos = 0.1f;
+	const float addPos = 0.1f;
 
 	float RightFrame = 4;
 	float LeftFrame = -4;
@@ -23,8 +23,8 @@ public class ArrayCharracter : MonoBehaviour {
 
 	public GameObject StartPosition;
 	public GameObject EndPosition;
-	//
-	bool Create=false;
+
+	bool Create = false;
 	public GameObject AddItem;
 	public List<Customers> myScriptList;
 	public int CustomersNum;
@@ -32,19 +32,16 @@ public class ArrayCharracter : MonoBehaviour {
 	int myListNum;
 
 	Vector3 tmpTarget = new Vector3 (0, 6, 0);
-	float timer=0;
 	// Audio
 	public AudioClip audioClip;
 	AudioSource audioSource;
 
 	Vector3 startPos,endPos;
 	// Score
-	public static int Score = 0;
 	bool AddScore  = false;
 
 	// Animator
 	Animator animator;
-	byte playerDirection = Key.DOWN;
 	static readonly int[] Up = new int[] { 
 		Animator.StringToHash ("PlayerSprite@Up"),
 		Animator.StringToHash ("PlayerBoxerSprite@Up"),
@@ -90,7 +87,7 @@ public class ArrayCharracter : MonoBehaviour {
 		audioSource = gameObject.GetComponent<AudioSource> ();
 		audioSource.clip = audioClip;
 		//
-		Score = 0;
+		Game.score = 0;
 		CustomersNum = myListNum = maxCustomersNum = myScriptList.Count;
 		startPos = StartPosition.transform.position;
 		endPos = EndPosition.transform.position;
@@ -109,12 +106,12 @@ public class ArrayCharracter : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if (!GameStatus.stop) {
+		if (!Game.stop) {
 			nowPosition = gameObject.transform.position;
 
 			// 移動
-			if (GameStatus.start && !AddScore) {
-				if (platform == Platform.Android){
+			if (Game.start && !AddScore) {
+				if (platform == Platform.Android) {
 					// Android
 					// タッチした座標
 					if (Input.touchCount > 0) {
@@ -129,72 +126,48 @@ public class ArrayCharracter : MonoBehaviour {
 
 					if ((nowPosition.y) < (touchPosition.y - addPos)) {
 						if (nowPosition.y < startPos.y - 1.1f) {
-							moveDirecResult += Key.UP;
-							direc = Key.UP;
-							UpdateTarget ();
+							MovementSettings (Key.UP);
 						}
-						playerDirection = Key.UP;
 					}
 					if ((nowPosition.y) > (touchPosition.y + addPos)) {
-						moveDirecResult += Key.DOWN;
-						playerDirection = Key.DOWN;
-						direc = Key.DOWN;
-						UpdateTarget ();
+						MovementSettings (Key.DOWN);
 					}
 					if ((nowPosition.x) > (touchPosition.x + addPos)) {
-						if (nowPosition.x > LeftFrame) {// 移動制限 
-							moveDirecResult += Key.LEFT;
-							playerDirection = Key.LEFT;
-							direc = Key.LEFT;
-							UpdateTarget ();
+						if (nowPosition.x > LeftFrame) {
+							MovementSettings (Key.LEFT);
 						}
 					}
 					if ((nowPosition.x) < (touchPosition.x - addPos)) {
 						if (nowPosition.x < RightFrame) {
-							moveDirecResult += Key.RIGHT;
-							playerDirection = Key.RIGHT;
-							direc = Key.RIGHT;
-							UpdateTarget ();
+							MovementSettings (Key.RIGHT);
 						}
 					}
-				} else if (platform == Platform.UnityEditor || platform == Platform.Windows){
+				} else if (platform == Platform.UnityEditor || platform == Platform.Windows) {
 					// Windows:UnityEditor
 					if (Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) {
 						if (nowPosition.y < startPos.y - 1.1f) {
-							moveDirecResult += Key.UP;
-							direc = Key.UP;
-							UpdateTarget ();
+							MovementSettings (Key.UP);
 						}
-						playerDirection = Key.UP;
 					}
 					if (Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.DownArrow)) {
-						moveDirecResult += Key.DOWN;
-						playerDirection = Key.DOWN;
-						direc = Key.DOWN;
-						UpdateTarget ();
+						MovementSettings (Key.DOWN);
 					}
 					if (Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) {
-						if (nowPosition.x > LeftFrame) {// 移動制限 
-							moveDirecResult += Key.LEFT;
-							direc = Key.LEFT;
-							UpdateTarget ();
+						if (nowPosition.x > LeftFrame) {
+							MovementSettings (Key.LEFT);
 						}
-						playerDirection = Key.LEFT;
 					}
 					if (Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) {
 						if (nowPosition.x < RightFrame) {
-							moveDirecResult += Key.RIGHT;
-							direc = Key.RIGHT;
-							UpdateTarget ();
+							MovementSettings (Key.RIGHT);
 						}
-						playerDirection = Key.RIGHT;
 					}
 				}
 
 				// アニメーション設定
-				changeAnimation (type, direc);//playerDirection);
+				changeAnimation (type, direc);
 				selectMoveDirection (moveDirecResult);
-				moveDirecResult = 0;
+
 			}
 			//********************************************************************************************************
 			//お客さんを数珠繋ぎに誘導する処理部分
@@ -206,17 +179,14 @@ public class ArrayCharracter : MonoBehaviour {
 				if (move) {
 					if (i != 0) {
 						// 自分の前にいるキャラのステータスを参照する
-						//int Direction = myScriptList [i - 1].direction;
-						myScriptList [i].SetAnimator (myScriptList [i - 1].direction);//(Direction);
+						myScriptList [i].SetAnimator (myScriptList [i - 1].direction);
 						myScriptList [i].target = myScriptList [i - 1].target;
 					}
 				}
 			}
 			// 最前列にいるお客さんは、プレイヤーのステータスを参照する
 			if (topDelay >= 0.1f) {
-				myScriptList [0].SetAnimator (direc);
-				myScriptList [0].target = tmpTarget;
-				tmpTarget = nowPosition;
+				TopTargetUpdate ();
 				topDelay = 0;
 			}
 			move = false;
@@ -227,36 +197,28 @@ public class ArrayCharracter : MonoBehaviour {
 			if (endPos.y >= nowPosition.y) {
 				// Score
 				if (!AddScore) {
-					Score += myScriptList.Count;
+					Game.score += myScriptList.Count;
 					AddScore = true;
+					Create = true;
 					// 各お客さんごとの取得数を格納
 					int j = 0;
 					while (j < CustomersNum) {
 						GameStatus.AddCustomerCount (myScriptList [j].type);
 						j++;
 					}
+					// ヨコアリくんを初期位置に戻す
+					StartCoroutine (ReturnToInitialPosition ());
 				}
 
 				// 自動ゴール
-				{
+				if (Vector3.Distance (nowPosition, endPos) >= 0.5f) {
 					float angle;
 					angle = Mathf.Atan2 (endPos.y - nowPosition.y, endPos.x - nowPosition.x);
-					if (Vector3.Distance (nowPosition, endPos) >= 0.5f) {
-						transform.position += new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * speed;
-					}
+					transform.position += new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * speed;
 				}
 
-				timer += Time.deltaTime;
-				if (timer >= 1) {
-					transform.position = startPos;
-					Alignment ();
-					timer = 0;
-				}
 				move = true;
-				Create = true;
-				touchPosition = new Vector3 (nowPosition.x, -10, 0);
 				// Set direction
-				playerDirection = Key.DOWN;
 				direc = Key.DOWN;
 				UpdateTarget ();
 			}
@@ -282,29 +244,24 @@ public class ArrayCharracter : MonoBehaviour {
 					while (j < CustomersNum) {
 						myScriptList [j].GenderDetermination ();
 						myScriptList [j].target = new Vector3 (0, 6, 0);
-						myScriptList [j].SetPosition (nowPosition);
+						myScriptList [j].Position = nowPosition;
 						j++;
 					}
 					Create = false;
+					AddScore = false;
+					touchPosition = new Vector3 (nowPosition.x, -10, 0);
 				}
 				transform.position += movePosiResult [4];
-
-				AddScore = false;
-				touchPosition = new Vector3 (nowPosition.x, -10, 0);
 				// Position
 				for (int i = CustomersNum - 1; i >= 0; i--) {
 					// ターゲット座標更新
 					if (i != 0) {
-						//byte Direction = myScriptList [i - 1].direction;
-						myScriptList [i].SetAnimator (myScriptList [i - 1].direction);//Direction);
+						myScriptList [i].SetAnimator (myScriptList [i - 1].direction);
 						myScriptList [i].target = myScriptList [i - 1].target;
 					}
 				}
-				myScriptList [0].SetAnimator (direc);
-				myScriptList [0].target = tmpTarget;
-				tmpTarget = nowPosition;
+				TopTargetUpdate ();
 				// Set direction
-				playerDirection = Key.DOWN;
 				direc = Key.DOWN;
 				UpdateTarget ();
 			}
@@ -328,10 +285,17 @@ public class ArrayCharracter : MonoBehaviour {
 		myListNum = CustomersNum;
 	}
 
-	// お客さんを再整列させる
+	// ヨコアリくんを初期位置に戻す
+	IEnumerator ReturnToInitialPosition(){
+		yield return new WaitForSeconds (1);
+		transform.position = startPos;
+		Alignment ();
+		touchPosition = new Vector3 (nowPosition.x, -10, 0);
+	}
+
+	//ヨコアリくんのタイプ変更
 	public void Alignment(){
 		myListNum = CustomersNum;
-		//ヨコアリくんのタイプ変更
 		switch (type) {
 		case NORMAL:type = BOXER;break;
 		case BOXER:type = GUITAR;break;
@@ -360,6 +324,19 @@ public class ArrayCharracter : MonoBehaviour {
 			move = true;
 			delay = 0;
 		}
+	}
+	// 先頭おターゲット更新
+	void TopTargetUpdate(){
+		myScriptList [0].SetAnimator (direc);
+		myScriptList [0].target = tmpTarget;
+		tmpTarget = nowPosition;
+	}
+
+	// 移動の設定をまとめている
+	void MovementSettings(byte key){
+		moveDirecResult += key;
+		direc = key;
+		UpdateTarget ();
 	}
 
 	// アニメーション変更
@@ -390,9 +367,9 @@ public class ArrayCharracter : MonoBehaviour {
 	}
 
 	IEnumerator ManualAnimation(){
-		while(true){
+		while (true) {
 			yield return new WaitForSeconds (.3f);
-			if (playerDirection == Key.UP || playerDirection == Key.DOWN)
+			if (direc == Key.UP || direc == Key.DOWN)
 				spriteRenderer.flipX = !spriteRenderer.flipX;
 		}
 	}
@@ -457,6 +434,6 @@ public class ArrayCharracter : MonoBehaviour {
 			break;
 		}
 		transform.position += move;
-
+		moveDirecResult = 0;
 	}
 }

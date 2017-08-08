@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Const;
 
 public class GameCanvas : MonoBehaviour {
 
@@ -12,23 +13,22 @@ public class GameCanvas : MonoBehaviour {
 
 	public float TimeToCleanUpText;
 	public float TimeLimit;
-	public float startCount=4;
-	public const string RankScene = "Result";
+	public float startCount = 4;
 	int CreateTime;
 
 	// Use this for initialization
 	void Start () {
-		TimeLimit = (GameStatus.difficulty == GameStatus.Difficulty.Normal) ? 50 : 100;
-		TimeToCleanUpText = (GameStatus.difficulty == GameStatus.Difficulty.Normal) ? 48 : 98;
+		TimeLimit = (Game.difficulty == Game.Difficulty.Normal) ? 50 : 100;
+		TimeToCleanUpText = (Game.difficulty == Game.Difficulty.Normal) ? 48 : 98;
 		CreateTime = (int)TimeLimit;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (!GameStatus.stop) {
-			if (GameStatus.start) {
+		if (!Game.stop) {
+			if (Game.start) {
 				GameTimer ();
-				ScoreText.text = "アリーナ:" + ArrayCharracter.Score.ToString () + "人";
+				ScoreText.text = "アリーナ:" + Game.score.ToString () + "人";
 			} else {
 				GameCountDown ();
 			}
@@ -39,17 +39,12 @@ public class GameCanvas : MonoBehaviour {
 	void GameTimer(){
 		if (CreateTime < 0) {
 			EndText.text = "しゅうりょう";
-			GameStatus.start = false;
-			if (CreateTime <= (-3)) {
-				Rank.FromTitle = false;
-				SceneManager.LoadScene (RankScene);
-			}
+			Game.stop = true;
+			StartCoroutine (GameEnd ());
 		} else {
 			TimeLimitText.text = "のこり :" + CreateTime.ToString ();
-
-			if (CreateTime <= TimeToCleanUpText) {
+			if (CreateTime <= TimeToCleanUpText)
 				StartCountText.text = "";
-			}
 		}
 
 		TimeLimit -= Time.deltaTime;
@@ -63,11 +58,17 @@ public class GameCanvas : MonoBehaviour {
 		CreateTime = Mathf.FloorToInt (startCount);
 		if (CreateTime >= 1) {
 			StartCountText.text = CreateTime.ToString ();
-			GameStatus.start = false;
+			Game.start = false;
 		} else {
 			StartCountText.text = "すたーと!!";
 			CreateTime = (int)TimeLimit;
-			GameStatus.start = true;
+			Game.start = true;
 		}
+	}
+
+	IEnumerator GameEnd(){
+		yield return new WaitForSeconds (3);
+		Rank.FromTitle = false;
+		SceneManager.LoadScene ("Result");
 	}
 }

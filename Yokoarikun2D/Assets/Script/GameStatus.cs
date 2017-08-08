@@ -3,15 +3,18 @@ using System.Collections;
 
 public class GameStatus : MonoBehaviour {
 
-	public static bool stop;
+	/*public static bool stop;
 
 	static bool _start = false;
 	public static bool start{ get { return _start; } set { _start = value; } }
 
+	static int _score = 0;
+	public static int score{ get { return _score; } set { _score = value; } }
+
 	// ゲーム難易度
 	public enum Difficulty : byte {None,Normal,Hard}
 	static Difficulty _difficulty;
-	public static Difficulty difficulty{ get { return _difficulty; } set { _difficulty = value; } }
+	public static Difficulty difficulty{ get { return _difficulty; } set { _difficulty = value; } }*/
 
 	//******************************************************************//
 	//			各種お客さんごとの獲得数の保存と吐き出し					//
@@ -90,4 +93,22 @@ namespace Const{
 		Android		= 2,
 		None		= 4;
 	}
+
+	public static class Game{		
+		public static bool stop;
+
+		static bool _start = false;
+		public static bool start{ get { return _start; } set { _start = value; } }
+
+		static int _score = 0;
+		public static int score{ get { return _score; } set { _score = value; } }
+
+		// ゲーム難易度
+		public enum Difficulty : byte {None,Normal,Hard}
+		static Difficulty _difficulty;
+		public static Difficulty difficulty{ get { return _difficulty; } set { _difficulty = value; } }
+		public static bool IsItHard(){return _difficulty == Difficulty.Hard;
+		}
+	}
+
 }

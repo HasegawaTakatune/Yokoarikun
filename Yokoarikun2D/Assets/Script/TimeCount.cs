@@ -1,19 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Const;
 
 public class TimeCount: MonoBehaviour {
 
-	public ArrayCharracter player;
 	public GUIText TimeLimitText;
 	public GUIText EndText;
 	public GUIText StartCountText;
 	public GUIText ScoreText;
 	public float TimeLimit = 50;
-	public float startCount=4;
+	public float startCount = 4;
 	public string RankScene = "Rank";
 	int CreateTime;
-	bool GameStart = false;
 
 	// Use this for initialization
 	void Start () {
@@ -22,9 +21,9 @@ public class TimeCount: MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (GameStart) {
+		if (Game.start) {
 			GameTimer ();
-			ScoreText.text = ArrayCharracter.Score.ToString() + "人";
+			ScoreText.text = Game.score.ToString() + "人";
 		} else {
 			GameCountDown ();
 		}
@@ -35,7 +34,7 @@ public class TimeCount: MonoBehaviour {
 	void GameTimer(){
 		if (CreateTime < 0) {
 			EndText.text = "しゅうりょう";
-			GameStatus.start = false;
+			Game.start = false;
 			if (CreateTime <= (-3)) {
 				Rank.FromTitle = false;
 				SceneManager.LoadScene (RankScene);
@@ -62,8 +61,7 @@ public class TimeCount: MonoBehaviour {
 		} else {
 			StartCountText.text = "すたーと!!";
 			CreateTime = (int)TimeLimit;
-			GameStatus.start = true;
-			GameStart = true;
+			Game.start = true;
 		}
 	}
 }
