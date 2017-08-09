@@ -46,5 +46,6 @@ public class StableAspect : MonoBehaviour {
 		Screen.autorotateToLandscapeRight = false;
 		Screen.autorotateToPortrait = true;
 		Screen.SetResolution ((int)width, (int)height, true);
+		Application.targetFrameRate = 60;
 	}
 }

@@ -43,7 +43,8 @@ public class Enemy : MonoBehaviour {
 					// ステージ入場
 						transform.Translate (movement, 0, 0);
 					// ステータス変更
-						if (transform.position.x >= -1 || transform.position.x >= 1) {
+						if (transform.position.x >= -1 || 
+							transform.position.x >= 1) {
 							status = STOP;
 							StartCoroutine (Escape ());
 						}
@@ -56,7 +57,8 @@ public class Enemy : MonoBehaviour {
 					// ステージ退場
 						transform.Translate (movement, 0, 0);
 					// ステータス変更
-						if (transform.position.x >= -position.x || transform.position.x <= position.x) {
+						if (transform.position.x >= -position.x || 
+							transform.position.x <= position.x) {
 							ScrollEnd ();
 							status = START;
 						}
@@ -66,20 +68,17 @@ public class Enemy : MonoBehaviour {
 				} else if (type == 1) {
 					//敵キャラの移動
 					transform.Translate (movement, 0, 0);
-					if (transform.position.x >= -position.x || transform.position.x <= position.x) {
+					if (transform.position.x >= -position.x || transform.position.x <= position.x)
 						ScrollEnd ();
-					}
 				}
 				break;
 	
 			case Game.Difficulty.Hard:
 			// 追尾
-				transform.position += new Vector3 (
-					movement,(player.position.y - transform.position.y) * 0.002f,0);
+				transform.position += new Vector3 (movement,(player.position.y - transform.position.y) * 0.002f,0);
 			// 行動終了
-				if (transform.position.x >= -position.x || transform.position.x <= position.x) {
+				if (transform.position.x >= -position.x || transform.position.x <= position.x)
 					ScrollEnd ();
-				}
 				break;
 
 			default:
@@ -113,6 +112,7 @@ public class Enemy : MonoBehaviour {
 		GetList.Add (customer);
 		if (type == 0)status = 2;
 		speed = 3;
+		movement = direction * speed * Time.deltaTime;
 		// お客さん誘導
 		StartCoroutine (UpdateTarget ());
 	}

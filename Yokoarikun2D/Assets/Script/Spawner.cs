@@ -3,8 +3,7 @@ using System.Collections;
 using Const;
 
 public class Spawner : MonoBehaviour {
-	const byte DOWN = 0;
-	public float interval = 5;
+	const float interval = 5;
 	public GameObject SpawnChar;
 	Customers SpawnCharScript;
 	public Vector3 MaxPosition;
@@ -13,12 +12,9 @@ public class Spawner : MonoBehaviour {
 	// Use this for initialization
 	IEnumerator Start () {
 		SpawnCharScript = SpawnChar.GetComponent<Customers> ();
-
 		SpawnCharScript.Induction = false;
 		while (true) {
 			if (!Game.stop) {
-				// Set Sprite and Animator
-				SpawnCharScript.type = (byte)Mathf.Floor (Random.Range (0, 3));
 				// Spawn
 				Instantiate (
 					SpawnChar,

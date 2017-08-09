@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Const;
 
 public class Customers : MonoBehaviour {
@@ -21,9 +22,11 @@ public class Customers : MonoBehaviour {
 	const float range = 0.05f;
 	public byte direction = 0;
 
-	Vector3[] movePosiResult = new Vector3[8];
+	public List<Vector3> movePosResult = new List<Vector3> ();
 	int Angle = 0;
 	float time = 0;
+
+	bool doOnce = false;
 
 	Animator animator;
 	static readonly int[] DOWN = new int[] {
@@ -51,13 +54,16 @@ public class Customers : MonoBehaviour {
 	void Start(){
 		spriteRenderer = GetComponent<SpriteRenderer> ();
 		GenderDetermination ();
-		int i = 0;
-		while (movePosiResult.Length != i) {
-			movePosiResult [i] = new Vector3 (Mathf.Sin ((transform.localEulerAngles.y + 45 * i) * 3.14f / 180) * 0.02f, 
-				Mathf.Cos ((transform.localEulerAngles.y + 45 * i) * 3.14f / 180) * 0.02f, 0);
-			i++;
+		// 移動量初期化
+		if (!Induction) {
+			for (int j = 0; j < 8; j++) {
+				movePosResult.Add (new Vector3 (
+					Mathf.Sin ((45 * j) * 3.14f / 180) * 0.02f,
+					Mathf.Cos ((45 * j) * 3.14f / 180) * 0.02f, 
+					0));
+			}
 		}
-		SetAnimator (0);
+		SetAnimator (Key.DOWN);
 	}
 	
 	// Update is called once per frame
@@ -75,6 +81,11 @@ public class Customers : MonoBehaviour {
 				}
 				//********************************************************************************************************
 				//********************************************************************************************************
+				if (!doOnce) {
+					// 移動量の解放
+					movePosResult.Clear ();
+					doOnce = true;
+				}
 			} else {
 				switch (moveStatus) {
 
@@ -87,16 +98,16 @@ public class Customers : MonoBehaviour {
 						if (3 < transform.position.x || transform.position.x < -3)
 							moveStatus = OutsideTheArea;
 					}else if (time <= 1) {
-						transform.position += movePosiResult [Angle];
+						transform.position += movePosResult [Angle];
 					}
 					break;
 
 				case OutsideTheArea:
 					//エリア外行動
 					if (transform.position.x >= 2)
-						transform.position += movePosiResult [6];
+						transform.position += movePosResult [6];
 					else if (transform.position.x <= -2)
-						transform.position += movePosiResult [2];
+						transform.position += movePosResult [2];
 					else
 						moveStatus = InArea;
 					break;
