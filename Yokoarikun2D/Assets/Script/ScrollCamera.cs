@@ -2,29 +2,32 @@
 using System.Collections;
 
 public class ScrollCamera : MonoBehaviour {
+	//******************************************************************//
+	//				スコアの結果発表（カウントアップ）制御				//
+	//******************************************************************//
+	[SerializeField]
+	Transform Player;							// プレイヤーの座標
+	Vector3 move;								// 移動先を格納する
+	[SerializeField]
+	float width_Right,width_Left,height_Top,height_Bottom;	// 末端の位置
 
-	public GameObject player;
-	Vector3 playerPosi,position;
-	float posiZ;
-
-	public float width_Right,width_Left,height_Top,height_Bottom;
-
-	// Use this for initialization
 	void Start () {
-		position.z = transform.position.z;
+		move.z = transform.position.z;			// 移動先の奥行を初期化
 	}
 	
-	// Update is called once per frame
 	void Update () {
-		playerPosi = player.transform.position;
+		Vector3 nowPosition = Player.position;	// プレイヤー座標を取得
 
 		// カメラ位置更新
-		if (height_Top >= playerPosi.y && height_Bottom <= playerPosi.y) {
-			position.y = playerPosi.y;
-		}
-		if (width_Left <= playerPosi.x && width_Right >= playerPosi.x) {
-			position.x = playerPosi.x;
-		}
-		transform.position = position;
+		if (height_Top >= nowPosition.y && height_Bottom <= nowPosition.y)	// 上下の末端でない限り
+			move.y = nowPosition.y;				// y座標を更新
+		if (width_Left <= nowPosition.x && width_Right >= nowPosition.x)	// 左右の末端でない限り
+			move.x = nowPosition.x;				// x座標を更新 
+		transform.position = move;				// 座標の代入
 	}
+
+
+	//******************************************************************//
+	//								End of class						//
+	//******************************************************************//
 }

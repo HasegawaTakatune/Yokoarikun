@@ -53,7 +53,6 @@
      <Compile Include="Assets\Script\GameCanvas.cs" />
      <Compile Include="Assets\Script\GameStatus.cs" />
      <Compile Include="Assets\Script\OnClickButton.cs" />
-     <Compile Include="Assets\Script\OnClickButtonBackTitle.cs" />
      <Compile Include="Assets\Script\OnClickButtonSceneManager.cs" />
      <Compile Include="Assets\Script\OnClickButtonSelect.cs" />
      <Compile Include="Assets\Script\PlayerPrefsX.cs" />
@@ -62,8 +61,6 @@
      <Compile Include="Assets\Script\ScrollCamera.cs" />
      <Compile Include="Assets\Script\Spawner.cs" />
      <Compile Include="Assets\Script\StableAspect.cs" />
-     <Compile Include="Assets\Script\TimeCount.cs" />
-     <Compile Include="Assets\Script\UI.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

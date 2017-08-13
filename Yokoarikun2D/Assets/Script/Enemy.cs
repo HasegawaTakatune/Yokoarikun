@@ -110,7 +110,7 @@ public class Enemy : MonoBehaviour {
 	// お客さんの奪取
 	public void GetCustomers(Customers customer){
 		GetList.Add (customer);
-		if (type == 0)status = 2;
+		status = 2;
 		speed = 3;
 		movement = direction * speed * Time.deltaTime;
 		// お客さん誘導

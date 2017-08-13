@@ -69,11 +69,10 @@ public class ArrayCharracter : MonoBehaviour {
 	void Awake(){
 		animator = GetComponent<Animator> ();
 	}
-
-	// Use this for initialization
+		
 	void Start () {
 
-		// 今使っているプラットホーム
+		// 今使っているプラットフォーム
 		if (Application.platform == RuntimePlatform.WindowsEditor) {
 			platform = Platform.UnityEditor;
 		} else if (Application.platform == RuntimePlatform.WindowsPlayer) {
@@ -103,8 +102,7 @@ public class ArrayCharracter : MonoBehaviour {
 
 		StartCoroutine (ManualAnimation ());
 	}
-
-	// Update is called once per frame
+		
 	void Update () {
 		if (!Game.stop) {
 			nowPosition = gameObject.transform.position;

@@ -5,54 +5,49 @@ using UnityEngine.UI;
 using Const;
 
 public class Result : MonoBehaviour {
+	//******************************************************************//
+	//				スコアの結果発表（カウントアップ）制御				//
+	//******************************************************************//
+	[SerializeField]
+	GameObject[] customers;		// 生成するオブジェクト
+	[SerializeField]
+	Text ResultText;			// 結果表示テキスト
 
-	static int score = 0;
-	public GameObject[] customers;
-	public Text ResultText;
-	// 集計終わり
-	bool totalEnd = false;
+	[SerializeField]
+	AudioClip DrumRoll;			// サウンド（ドラムロール）
+	[SerializeField]
+	AudioClip DrumEnd;			// サウンド（ドラムロールラスト）
+	[SerializeField]
+	AudioSource audioSource;	// オーディオソース格納
 
-	// Audio
-	public AudioClip DrumRoll;
-	public AudioClip DrumEnd;
-	AudioSource audioSource;
-
-	// Use this for initialization
 	void Start () {
-		score = 0;
-		ResultText.text = "あつめた人数:" + score;
-		audioSource = gameObject.GetComponent<AudioSource> ();
-		ResultText = GetComponent<Text>();
-		StartCoroutine (ScoreUp ());
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (totalEnd) {
-			if (Input.GetKeyDown (KeyCode.Space) || Input.anyKeyDown || Input.touchCount > 0) {
-				SceneManager.LoadScene ("Rank");
-			}
-		}
+		ResultText.text = "あつめた人数:" + 0;			// テキストの初期化
+		StartCoroutine(CountUpScore ());				// スコアのカウントアップ
 	}
 
-	IEnumerator ScoreUp(){
-		score = 0;
-		while (score <= Game.score) {
-			if (score >= (Game.score - 1)) {
-				audioSource.Stop ();
-				audioSource.PlayOneShot (DrumEnd);
-			}
-			if (score != 0) {
-				ResultText.text = "あつめた人数:" + score;
-				Instantiate (customers [GameStatus.GetCustomerCount ()],
-					new Vector3 (Random.Range (-3.0f, 3.0f), 
-						Random.Range (-4.5f, 0.5f), score), 
+	// スコアのカウントアップ関数
+	IEnumerator CountUpScore(){
+		int countUp = 1;								// カウントアップ用
+		bool DoOnce = false;							// 1度だけ実行
+		while (true) {
+			if (countUp <= Game.score) {				// 獲得スコアまでループする
+				ResultText.text = "あつめた人数:" + countUp;					// スコアのカウントアップテキストを更新
+				Instantiate (customers [GameStatus.GetCustomerCount ()],	// 獲得キャラクターの生成
+					new Vector3 (Random.Range (-3.0f, 3.0f), Random.Range (-4.5f, 0.5f), countUp),
 					Quaternion.identity);
-			}
-			score++;
-			yield return null;
+				countUp++;								// スコアのカウントアップ
+			}else if(!DoOnce){
+				audioSource.Stop ();					// ドラムロールを停止
+				audioSource.PlayOneShot (DrumEnd);		// ドラムロールラストを再生
+				DoOnce = true;
+			}else if (Input.anyKeyDown || Input.touchCount > 0)		// 集計が終了・入力をしたら
+					SceneManager.LoadScene ("Rank");				// ランキング画面に遷移する
+			yield return new WaitForSeconds (.01f);
 		}
-		totalEnd = true;
 	}
 
+
+	//******************************************************************//
+	//								End of class						//
+	//******************************************************************//
 }

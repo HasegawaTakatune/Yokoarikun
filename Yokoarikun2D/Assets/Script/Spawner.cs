@@ -3,26 +3,32 @@ using System.Collections;
 using Const;
 
 public class Spawner : MonoBehaviour {
-	const float interval = 5;
-	public GameObject SpawnChar;
-	Customers SpawnCharScript;
-	public Vector3 MaxPosition;
-	public Vector3 MinPosition;
+	//******************************************************************//
+	//						キャラクターの生成を制御						//
+	//******************************************************************//
+	[SerializeField]
+	float interval = 5;			// 次の生成までの間隔
+	[SerializeField]
+	GameObject SpawnCharacter;	// 生成キャラクター
+	[SerializeField]
+	Vector3 MaxPosition;		// 生成の最大座標
+	[SerializeField]
+	Vector3 MinPosition;		// 生成の最小座標
 
-	// Use this for initialization
 	IEnumerator Start () {
-		SpawnCharScript = SpawnChar.GetComponent<Customers> ();
-		SpawnCharScript.Induction = false;
 		while (true) {
-			if (!Game.stop) {
-				// Spawn
-				Instantiate (
-					SpawnChar,
+			if (!Game.stop) {	// ゲーム稼働中
+				Instantiate (	// キャラクターの生成
+					SpawnCharacter,
 					new Vector3 ((0 == (Random.Range (0, 2)) ? 5 : -5),Random.Range (MinPosition.y, MaxPosition.y),0),
 					transform.rotation);
 			}
-			// 待ち時間
-			yield return new WaitForSeconds(interval);
+			yield return new WaitForSeconds(interval);	// 次の生成までの間隔をあける
 		}
 	}
+
+
+	//******************************************************************//
+	//								End of class						//
+	//******************************************************************//
 }

@@ -13,7 +13,7 @@ public class Customers : MonoBehaviour {
 	public int CustomerNumber;
 	public ArrayCharracter player;
 	Enemy enemy;
-	public bool Induction = true;
+	public bool Induction = false;
 	bool hit = false;
 
 	public Vector3 target = new Vector3 (0, 6, 0);
@@ -66,7 +66,6 @@ public class Customers : MonoBehaviour {
 		SetAnimator (Key.DOWN);
 	}
 	
-	// Update is called once per frame
 	void Update () {
 		if (!Game.stop) {
 			if (Induction) {
