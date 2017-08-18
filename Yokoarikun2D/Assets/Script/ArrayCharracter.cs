@@ -29,7 +29,6 @@ public class ArrayCharracter : MonoBehaviour {
 	public List<Customers> myScriptList;
 	public int CustomersNum;
 	int maxCustomersNum;
-	int myListNum;
 
 	Vector3 tmpTarget = new Vector3 (0, 6, 0);
 	// Audio
@@ -87,7 +86,7 @@ public class ArrayCharracter : MonoBehaviour {
 		audioSource.clip = audioClip;
 		//
 		Game.score = 0;
-		CustomersNum = myListNum = maxCustomersNum = myScriptList.Count;
+		CustomersNum = maxCustomersNum = myScriptList.Count;
 		startPos = StartPosition.transform.position;
 		endPos = EndPosition.transform.position;
 
@@ -271,16 +270,15 @@ public class ArrayCharracter : MonoBehaviour {
 
 	// お客さんがはぐれてしまう
 	public void Hit(int Number, Enemy enemy){
-		int i = myListNum - 1;
+		int i = CustomersNum - 1;
 		// 迷子スイッチ
 		while (i >= Number) {
-			enemy.GetCustomers (myScriptList [i]);
+			//enemy.GetCustomers (myScriptList [i]);
 			myScriptList.RemoveAt (i);
 			i--;
 		}
 		audioSource.PlayOneShot (audioClip);
 		CustomersNum = myScriptList.Count;
-		myListNum = CustomersNum;
 	}
 
 	// ヨコアリくんを初期位置に戻す
@@ -293,7 +291,6 @@ public class ArrayCharracter : MonoBehaviour {
 
 	//ヨコアリくんのタイプ変更
 	public void Alignment(){
-		myListNum = CustomersNum;
 		switch (type) {
 		case NORMAL:type = BOXER;break;
 		case BOXER:type = GUITAR;break;
@@ -374,20 +371,18 @@ public class ArrayCharracter : MonoBehaviour {
 
 	// お客さんの追加
 	void GetCustomers(GameObject obj){
-		myScriptList.Add(obj.GetComponent<Customers>());
-		myScriptList [CustomersNum].Induction = true;
-		myScriptList [CustomersNum].player = gameObject.GetComponent<ArrayCharracter> ();
+		//myScriptList.Add(obj.GetComponent<Customers>());
+		//myScriptList [CustomersNum].Induction = true;
+		//myScriptList [CustomersNum].player = gameObject.GetComponent<ArrayCharracter> ();
 		CustomersNum = myScriptList.Count;
-		myListNum = CustomersNum;
-		myScriptList [CustomersNum - 1].CustomerNumber = myListNum;
+		myScriptList [CustomersNum - 1].CustomerNumber = CustomersNum;
 	}
 
 	// お客さんの削除
 	void DeleteCustomers(){
-		myScriptList [CustomersNum - 1].KillMe ();
+		myScriptList [CustomersNum - 1].destroy();
 		myScriptList.RemoveAt (CustomersNum - 1);
 		CustomersNum = myScriptList.Count;
-		myListNum = CustomersNum;
 	}
 
 	// 移動関数(switch)

@@ -18,7 +18,7 @@ public class GameCanvas : MonoBehaviour {
 	int TimeLimit;			// タイムリミット
 
 	void Start () {
-		TimeLimit = (Game.difficulty == Game.Difficulty.Normal) ? 30 : 30;		// 難易度ごとの制限時間	（Normal : 50  Hard : 100）
+		TimeLimit = (Game.difficulty == Game.Difficulty.Normal) ? 30 : 300;		// 難易度ごとの制限時間	（Normal : 50  Hard : 100）
 		StartCoroutine (CountDown ());		// スタートカウントダウン開始
 		StartCoroutine (GameTimer ());		// ゲームタイマー開始
 	}

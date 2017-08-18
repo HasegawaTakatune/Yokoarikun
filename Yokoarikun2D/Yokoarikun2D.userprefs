@@ -1,18 +1,18 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\UI.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\Enemy.cs">
     <Files>
-      <File FileName="Assets\Script\TimeCount.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\Enemy.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\ArrayCharracter.cs" Line="75" Column="20" />
-      <File FileName="Assets\Script\Customers.cs" Line="1" Column="1" />
+      <File FileName="Assets\Script\LeadControl.cs" Line="1" Column="1" />
+      <File FileName="Assets\Script\Player.cs" Line="198" Column="1" />
+      <File FileName="Assets\Script\ArrayCharracter.cs" Line="1" Column="1" />
+      <File FileName="Assets\Script\Customers.cs" Line="165" Column="15" />
       <File FileName="Assets\Script\PlayerPrefsX.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\GameStatus.cs" Line="76" Column="12" />
+      <File FileName="Assets\Script\GameStatus.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\ScrollCamera.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\Spawner.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\StableAspect.cs" Line="43" Column="1" />
+      <File FileName="Assets\Script\StableAspect.cs" Line="1" Column="1" />
       <File FileName="Assets\Script\GameCanvas.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\UI.cs" Line="16" Column="42" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

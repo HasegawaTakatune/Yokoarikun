@@ -28,11 +28,10 @@ public class StableAspect : MonoBehaviour {
 			cam.rect = new Rect(0f, (1f - camHeight) / 2f, 1f, camHeight);	// viewport rectを設定
 		}
 
-		//Screen.autorotateToLandscapeLeft = false;
-		//Screen.autorotateToLandscapeRight = false;
-		Screen.autorotateToPortrait = true;
-		//Screen.SetResolution ((int)width, (int)height, true);
-		Application.targetFrameRate = 60;
+		Screen.autorotateToLandscapeLeft = false;	// 画面を左に自動回転させるのを無効化
+		Screen.autorotateToLandscapeRight = false;	// 画面を右に自動回転させるのを無効化
+		Screen.autorotateToPortrait = true;			// 画面を上に自動回転させるのを有効化
+		Application.targetFrameRate = 60;			// フレームレートを60fpsに設定
 	}
 
 

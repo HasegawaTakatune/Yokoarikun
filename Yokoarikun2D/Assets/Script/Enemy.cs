@@ -5,11 +5,13 @@ using Const;
 
 public class Enemy : MonoBehaviour {
 
+	[SerializeField]
+	LeadControl leadControl;
 	public Transform player;
 	const byte START=0,STOP=1,EXIT=2;
 	const int min = 1,max = 3;
 
-	public List<Customers> GetList;
+	//public List<Customers> GetList;
 
 	public float speed = 1.0f;
 	public byte status = START; //敵の行動パターン
@@ -103,30 +105,31 @@ public class Enemy : MonoBehaviour {
 		speed = Random.Range (1, 2) + (0.015f * Game.score);				// スピード　スコアによって速度が上がる
 		transform.position = new Vector3 (position.x * direction, position.y + y, position.z);	// 初期位置
 		spriteRenderer.flipX = (direction == 1) ? false : true;								// 向きの変換
-		RemoveAllCustomers ();																// お客さんを開放
+		//RemoveAllCustomers ();																// お客さんを開放
 		movement = direction * speed * Time.deltaTime;
+		leadControl.RemoveAllCustomers ();
 	}
 
 	// お客さんの奪取
-	public void GetCustomers(Customers customer){
+	/*public void GetCustomers(Customers customer){
 		GetList.Add (customer);
 		status = 2;
 		speed = 3;
 		movement = direction * speed * Time.deltaTime;
 		// お客さん誘導
 		StartCoroutine (UpdateTarget ());
-	}
+	}*/
 
 	// 全客さんを開放
-	public void RemoveAllCustomers(){
+	/*public void RemoveAllCustomers(){
 		for (int i = GetList.Count - 1; i >= 0; i--) {
 			GetList [i].KillMe ();
 			GetList.RemoveAt (i);
 		}
-	}
+	}*/
 
 	// ターゲット位置の更新
-	IEnumerator UpdateTarget(){
+	/*IEnumerator UpdateTarget(){
 		while (true) {
 			yield return new WaitForSeconds (0.3f);
 			for (int i = GetList.Count - 1; i >= 0; i--) {
@@ -136,7 +139,7 @@ public class Enemy : MonoBehaviour {
 					GetList [0].target = transform.position;
 			}
 		}
-	}
+	}*/
 
 	// 逃げる
 	IEnumerator Escape(){
