@@ -9,7 +9,7 @@ public class Customers : MonoBehaviour {
 	//******************************************************************//
 	const byte OutsideTheArea=0,InArea=1,Break=2;				// 移動タイプ　(OutsideTheArea : エリア外の移動  InArea : エリア内移動)
 	byte moveStatus = 0;										// 移動タイプを格納
-	public byte type;											// キャラクターのタイプを設定 (Boy_1・Boy_2・Girl_1)
+	public int type;											// キャラクターのタイプを設定 (Boy_1・Boy_2・Girl_1)
 
 	public int CustomerNumber;									// キャラクターの番号
 	public LeadControl player;									// 誘導される対象を格納
@@ -159,7 +159,7 @@ public class Customers : MonoBehaviour {
 
 	// キャラクターのタイプを再設定
 	public void GenderDetermination (){
-		type = (byte)Mathf.Floor (Random.Range (0, 3));	// ランダムでキャラクターのタイプを設定する
+		type = (int)Mathf.Floor (Random.Range (0, 3));	// ランダムでキャラクターのタイプを設定する
 	}
 
 	// ポジションを設定する

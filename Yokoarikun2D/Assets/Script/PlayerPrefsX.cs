@@ -7,6 +7,9 @@ using System.Collections.Generic;
 
 public class PlayerPrefsX
 {
+	//**************************************************************//
+	//					データの保存・取り出しをする					//
+	//**************************************************************//
 	static private int endianDiff1;
 	static private int endianDiff2;
 	static private int idx;
@@ -659,4 +662,9 @@ public class PlayerPrefsX
 		byteBlock[3 - endianDiff1] = bytes[idx+3];
 		idx += 4;
 	}
+
+
+	//**************************************************************//
+	//								End of class					//
+	//**************************************************************//
 }

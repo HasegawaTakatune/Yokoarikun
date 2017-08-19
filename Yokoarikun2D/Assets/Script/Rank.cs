@@ -22,6 +22,7 @@ public class Rank : MonoBehaviour {
 			PlayerPrefsX.SetIntArray ("Normal", ScoreArray);	// ノーマルモードのスコアを初期化
 			PlayerPrefsX.SetIntArray ("Hard", ScoreArray);		// ハードモードのスコアを初期化
 		}
+		if(Game.score == 0)Ranking[3].gameObject.SetActive(false);				// スコアが0の時ランク外表示を非表示
 		Key = (Game.difficulty == Game.Difficulty.Normal) ? "Normal" : "Hard";	// キー設定
 		ScoreArray = PlayerPrefsX.GetIntArray (Key);	// 過去スコアを取得
 		myScore = Game.score;	// プレイヤーのスコアを取得
@@ -56,8 +57,8 @@ public class Rank : MonoBehaviour {
 				Ranking [3].gameObject.SetActive (false);	// ランク外テキストを非表示
 				doOnce = false;								// 1度だけ実行
 			}
-			Ranking [3].text = "あなた " + (Game.score).ToString () + "人";	// ランク外の表示
 		}
+		Ranking [3].text = "あなた " + (Game.score).ToString () + "人";	// ランク外の表示
 	}
 
 

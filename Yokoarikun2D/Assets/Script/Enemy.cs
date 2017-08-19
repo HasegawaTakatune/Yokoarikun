@@ -3,84 +3,72 @@ using System.Collections;
 using System.Collections.Generic;
 using Const;
 
-public class Enemy : MonoBehaviour {
+public class Enemy : MonoBehaviour,RecieveInterface{
+	//******************************************************************//
+	//								敵の制御								//
+	// 					移動制御・アニメーション制御						//
+	//******************************************************************//
+
 
 	[SerializeField]
-	LeadControl leadControl;
-	public Transform player;
-	const byte START=0,STOP=1,EXIT=2;
-	const int min = 1,max = 3;
-
-	//public List<Customers> GetList;
-
-	public float speed = 1.0f;
-	public byte status = START; //敵の行動パターン
-	public int type = 0;
-	public int direction = 1;
-	Vector3 position;
-	bool isItHard;
-	float movement;
-
-	// Animator
-	SpriteRenderer spriteRenderer;
-
-	void Awake(){
-		spriteRenderer = GetComponent<SpriteRenderer> ();
-	}
+	LeadControl leadControl;			// 誘導コンポーネントを参照
+	Transform player;					// プレイヤー座標を参照
+	const byte START=0,STOP=1,EXIT=2;	// 行動ステータス
+	[SerializeField]
+	byte status = START; 				// 行動パターン
+	const int FEINT=0,RUN=1;			// 行動タイプ一覧
+	[SerializeField]
+	int type = FEINT;					// 行動タイプ
+	[SerializeField]
+	float speed = 1.0f;					// 移動速度
+	[SerializeField]
+	int direction = 1;					// 移動方向
+	Vector3 position;					// ステータス変更の基準座標を格納
+	float movement;						// 移動量を格納
+	[SerializeField]
+	SpriteRenderer spriteRenderer;		// スプライトレンダラ―格納
 
 	void Start(){
-		player = GameObject.Find ("Player").transform;
-		position = transform.position;
-		isItHard = Game.IsItHard ();
-		movement = direction * speed * Time.deltaTime;
+		player = GameObject.Find ("Player").transform;	// プレイヤー座標を初期化
+		position = transform.position;					// 基準座標の初期化
+		movement = direction * speed * Time.deltaTime;	// 移動量の初期化
 	}
 
 	void Update () {
-		if (!Game.stop && Game.start) {
-			switch (Game.difficulty) {
-			case Game.Difficulty.Normal:
-				if (type == 0) {
-					switch (status) {
-					case START:
-					// ステージ入場
-						transform.Translate (movement, 0, 0);
-					// ステータス変更
-						if (transform.position.x >= -1 || 
-							transform.position.x >= 1) {
-							status = STOP;
-							StartCoroutine (Escape ());
+		if (!Game.stop && Game.start) {		// 停止していない・ゲームが稼働中の時
+			switch (Game.difficulty) {		// 難易度分岐
+			case Game.Difficulty.Normal:	// ノーマルモード
+				if (type == FEINT) {		// フェイント行動
+					switch (status) {		// ステータスで行動分岐
+					case START:				// 移動開始
+						transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
+						if (transform.position.x >= -1 || transform.position.x >= 1) {	// 指定座標に到達した時
+							status = STOP;						// 一時停止をさせる
+							StartCoroutine (Escape ());			// ステータスを逃げるに変更する関数
 						}
 						break;
 
-					case STOP:
+					case STOP:				// 一時停止（何もしない）
 						break;
 
-					case EXIT:
-					// ステージ退場
-						transform.Translate (movement, 0, 0);
-					// ステータス変更
-						if (transform.position.x >= -position.x || 
-							transform.position.x <= position.x) {
-							ScrollEnd ();
-							status = START;
-						}
+					case EXIT:									// 退出
+						transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
+						if (transform.position.x >= -position.x || transform.position.x <= position.x)	// フレームアウトした時
+							ScrollEnd ();						// ステータスを再設定する関数
 						break;
 					}
 			
-				} else if (type == 1) {
-					//敵キャラの移動
-					transform.Translate (movement, 0, 0);
-					if (transform.position.x >= -position.x || transform.position.x <= position.x)
-						ScrollEnd ();
+				} else if (type == RUN) {					// 走る行動
+					transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
+					if (transform.position.x >= -position.x || transform.position.x <= position.x)		// フレームアウトした時
+						ScrollEnd ();						// ステータスを再設定する関数
 				}
 				break;
 	
-			case Game.Difficulty.Hard:
-			// 追尾
-				transform.position += new Vector3 (movement,(player.position.y - transform.position.y) * 0.002f,0);
-			// 行動終了
-				if (transform.position.x >= -position.x || transform.position.x <= position.x)
-					ScrollEnd ();
+			case Game.Difficulty.Hard:	// ハードモード
+				transform.position += new Vector3 (movement,(player.position.y - transform.position.y) * 0.002f,0);	// プレイヤーを追尾
+				if (transform.position.x >= -position.x || transform.position.x <= position.x)						// フレームアウトした時 
+					ScrollEnd ();		// ステータスを再設定する関数
 				break;
 
 			default:
@@ -91,60 +79,39 @@ public class Enemy : MonoBehaviour {
 		}
 	}
 
-	/// Function/////////////////////////////////////////////////
 
 	// 画面端まで到着したら
 	void ScrollEnd(){
-		float y = 0;
-		if (isItHard) {
-			y = Random.Range (-6, 0);
+		float y = 0;		// 次に出撃するy座標を設定
+		status = START;		// ステータスを始めに戻す
+		if (Game.IsItHard ()) {			// ハードモードの時
+			y = Random.Range (-6, 0);	// y座標をランダム指定
 			position = new Vector3 (position.x, player.position.y, position.z);
 		}
-		type = (Random.Range (0, 2));										// 行動パターン
-		direction = (Random.Range (0, 2)) == 0 ? 1 : -1;					// 初期方向
-		speed = Random.Range (1, 2) + (0.015f * Game.score);				// スピード　スコアによって速度が上がる
+		type = (Random.Range (0, 2));								// 行動パターンを再設定
+		direction = (Random.Range (0, 2)) == 0 ? 1 : -1;			// 移動方向を再設定
+		speed = Random.Range (1, 2) + (0.015f * Game.score);		// スピード　スコアによって速度が上がる
 		transform.position = new Vector3 (position.x * direction, position.y + y, position.z);	// 初期位置
-		spriteRenderer.flipX = (direction == 1) ? false : true;								// 向きの変換
-		//RemoveAllCustomers ();																// お客さんを開放
-		movement = direction * speed * Time.deltaTime;
-		leadControl.RemoveAllCustomers ();
+		spriteRenderer.flipX = (direction == 1) ? false : true;		// 向きの変換
+		movement = direction * speed * Time.deltaTime;				// 移動量の再設定
+		leadControl.RemoveAllCustomers ();							// 横取りしたキャラクターを全開放する
 	}
 
-	// お客さんの奪取
-	/*public void GetCustomers(Customers customer){
-		GetList.Add (customer);
-		status = 2;
-		speed = 3;
-		movement = direction * speed * Time.deltaTime;
-		// お客さん誘導
-		StartCoroutine (UpdateTarget ());
-	}*/
-
-	// 全客さんを開放
-	/*public void RemoveAllCustomers(){
-		for (int i = GetList.Count - 1; i >= 0; i--) {
-			GetList [i].KillMe ();
-			GetList.RemoveAt (i);
-		}
-	}*/
-
-	// ターゲット位置の更新
-	/*IEnumerator UpdateTarget(){
-		while (true) {
-			yield return new WaitForSeconds (0.3f);
-			for (int i = GetList.Count - 1; i >= 0; i--) {
-				if (i != 0)
-					GetList [i].target = GetList [i - 1].target;
-				else
-					GetList [0].target = transform.position;
-			}
-		}
-	}*/
-
-	// 逃げる
-	IEnumerator Escape(){
-		yield return new WaitForSeconds (Random.Range (min, max));
-		status = EXIT;
+	// キャラクターを横取りした時のメッセージ処理（受信）
+	public void ISnatched(){
+		status = EXIT;		// 逃げる行動に移る
+		speed = 3;			// 早足で逃げる
+		movement = direction * speed * Time.deltaTime;	// 移動量の再設定
 	}
 		
+	// 逃げる（コルーチン）
+	IEnumerator Escape(){
+		yield return new WaitForSeconds (Random.Range (1, 3));	// 逃げ始めるタイミングを図る
+		status = EXIT;		// 逃げる行動に移る
+	}
+
+
+	//******************************************************************//
+	//								End of class						//
+	//******************************************************************//
 }

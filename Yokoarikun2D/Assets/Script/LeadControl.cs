@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Const;
 
 public class LeadControl : MonoBehaviour {
@@ -83,6 +84,7 @@ public class LeadControl : MonoBehaviour {
 	// キャラクターを横取りされる処理
 	// 横取りされるキャラクターを先頭にして、その後ろのすべてのキャラクターを横取りされる
 	public void Hit(int number, LeadControl obj){
+		ExecuteEvents.Execute<RecieveInterface>(target:gameObject,eventData:null,functor:(reciever,eventData)=>reciever.ISnatched());	// 横取りイベントを呼ぶ
 		int index = myList.Count - 1;					// 最後尾の参照
 		while (index >= number) {						// 横取りされる先頭の要素数までループ
 			obj.GetCustomers (myList [index]);			// 横取りされる相手に、キャラクターを獲得させる

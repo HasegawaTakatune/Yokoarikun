@@ -47,7 +47,6 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Script\ArenaIcon.cs" />
-     <Compile Include="Assets\Script\ArrayCharracter.cs" />
      <Compile Include="Assets\Script\Customers.cs" />
      <Compile Include="Assets\Script\Enemy.cs" />
      <Compile Include="Assets\Script\GameCanvas.cs" />
@@ -59,6 +58,7 @@
      <Compile Include="Assets\Script\Player.cs" />
      <Compile Include="Assets\Script\PlayerPrefsX.cs" />
      <Compile Include="Assets\Script\Rank.cs" />
+     <Compile Include="Assets\Script\RecieveInterface.cs" />
      <Compile Include="Assets\Script\Result.cs" />
      <Compile Include="Assets\Script\ScrollCamera.cs" />
      <Compile Include="Assets\Script\Spawner.cs" />

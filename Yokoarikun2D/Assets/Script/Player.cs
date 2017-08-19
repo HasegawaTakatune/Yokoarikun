@@ -10,7 +10,7 @@ public class Player : MonoBehaviour {
 	//				スタート/ゴール処理・誘導関数の呼び出し制御			//
 	//******************************************************************//
 	[SerializeField]
-	LeadControl leadControl;					// 誘導コンポーネントを格納
+	LeadControl leadControl;					// 誘導コンポーネントを参照
 	byte platform = 0;							// プラットフォームの格納
 
 	Vector3 touchPosition;						// タッチした座標
