@@ -1,12 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\LeadControl.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\PlayerPrefsX.cs">
     <Files>
-      <File FileName="Assets\Script\PlayerPrefsX.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\ArenaIcon.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\Rank.cs" Line="1" Column="1" />
-      <File FileName="Assets\Script\Customers.cs" Line="19" Column="66" />
-      <File FileName="Assets\Script\LeadControl.cs" Line="1" Column="1" />
+      <File FileName="Assets\Script\PlayerPrefsX.cs" Line="11" Column="20" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

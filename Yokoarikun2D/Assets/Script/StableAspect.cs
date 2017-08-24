@@ -10,6 +10,13 @@ public class StableAspect : MonoBehaviour {
 	private float height = 1280;		// カメラの縦幅
 	private float pixelPerUni=100f;		// ユニット当たりのピクセル(Pixel Per Unit)
 
+	//**************************************************************//
+	//	関数名　:	Awake
+	//	機能		:	カメラのアスペクト比率を設定する
+	//				画面の自動回転を制御・フレームレートの設定
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	void Awake(){
 		float aspect = (float)Screen.height / (float)Screen.width;	// 現在のアスペクト比
 		float bgAcpect = height / width;							// 設定したいアスペクト比

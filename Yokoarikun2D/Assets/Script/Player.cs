@@ -5,9 +5,16 @@ using Const;
 
 public class Player : MonoBehaviour {
 	//******************************************************************//
-	//							プレイヤー制御							//
-	// 					移動制御・アニメーション制御						//
-	//				スタート/ゴール処理・誘導関数の呼び出し制御			//
+	//	プレイヤー制御
+	// 	移動制御・アニメーション制御	
+	//	スタート/ゴール処理・誘導関数の呼び出し制御
+	//
+	//	呼び出し関係図
+	//	Start　───>ManualAnimation
+	//	Update ─┬─>MovementSettings			┌─>Alignment
+	//			├─>changeAnimation			├─>LeadControl.AddScore
+	//			├─>selectMoveDirection		├─>LeadControl.APositionIsInitialized
+	//			└─>ReturnToInitialPosition	┴─>LeadControl.AListIsInitialized
 	//******************************************************************//
 	[SerializeField]
 	LeadControl leadControl;					// 誘導コンポーネントを参照
@@ -58,8 +65,13 @@ public class Player : MonoBehaviour {
 
 	public const float speed = 0.05f;	// 移動速度
 
+	//**************************************************************//
+	//	関数名　:	Start
+	//	機能		:	プラットホーム設定、スコア・移動量の初期化、手動アニメーション制御開始
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	void Start () {
-
 		// 今使っているプラットフォーム
 		if (Application.platform == RuntimePlatform.WindowsEditor) {		// Unityエディター
 			platform = Platform.UnityEditor;
@@ -85,6 +97,13 @@ public class Player : MonoBehaviour {
 		StartCoroutine (ManualAnimation ());	// アニメーション制御関数
 	}
 
+	//**************************************************************//
+	//	関数名　:	Update
+	//	機能		:	移動制御・アニメーション制御
+	//				スタート地点からの入場・ゴール時の自動移動処理
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	void Update () {
 		if (!Game.stop) {									// ポーズ状態じゃない時
 			nowPosition = gameObject.transform.position;	// 現在の座標を更新
@@ -160,8 +179,14 @@ public class Player : MonoBehaviour {
 			}
 		}
 	}
-		
-	// ゴール後の初期化処理群（コルーチン）
+
+	//**************************************************************//
+	//	関数名　:	ReturnToInitialPosition
+	//	機能		:	ゴール後の初期化処理群（コルーチン）
+	//				スコア加算、座標・誘導キャラクターの初期化
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	IEnumerator ReturnToInitialPosition(){
 		AddScore = true;										// スコアの加算をしたことを知らせる
 		leadControl.AddScore ();								// 誘導したキャラクターの数分スコアに反映する
@@ -173,8 +198,13 @@ public class Player : MonoBehaviour {
 		leadControl.AListIsInitialized (5);						// 誘導するキャラクターの誘導人数を初期化
 	}
 
-	// キャラクターのタイプ変更
-	// ノーマル　→　ボクサー　→　ギター　→　ノーマル　の順に変更していく
+	//**************************************************************//
+	//	関数名　:	Alignment
+	//	機能		:	キャラクターのタイプ変更（キャラクター画像の種類変更）
+	// 				ノーマル　→　ボクサー　→　ギター　→　ノーマル　の順に変更していく
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	public void Alignment(){
 		switch (type) {
 		case NORMAL:type = BOXER;break;		// ノーマル　→　ボクサー
@@ -184,17 +214,26 @@ public class Player : MonoBehaviour {
 		animator.Play (Down [type]);		// 下向きのアニメーションを再生
 	}
 
-
-
-	// 移動の設定をまとめて制御する
+	//**************************************************************//
+	//	関数名　:	MovementSettings
+	//	機能		:	移動方向・アニメーションの向きを設定
+	//	引数		:	byte key	向きを受け取る	UP:1 RIGHT:2 DOWN:4 LEFT:8
+	//	戻り値	:	なし
+	//**************************************************************//
 	void MovementSettings(byte key){
 		moveDirecResult += key;		// 移動方向の設定
 		direc = key;				// アニメーションの向きを設定
 	}
 
-	// アニメーション制御
-	// 右向きのアニメーションは、左向きのアニメーションを反転させて使い、
-	// アニメーション画像の削減をしている、そのため、右向きの処理で左向きのアニメーションを再生している
+	//**************************************************************//
+	//	関数名　:	changeAnimation
+	//	機能		:	アニメ画像の種類・向き別にアニメーション制御をする
+	// 				右向きのアニメーションは、左向きのアニメーションを反転させて使い、アニメーション画像の削減をしている。
+	//				そのため、右向きの処理で左向きのアニメーションを再生している
+	//	引数		:	int type		キャラクターのタイプを受け取る NORMAL:0	BOXER:1	GUITAR:2
+	//				byte direction	向きを受け取る	UP:1 RIGHT:2 DOWN:4 LEFT:8
+	//	戻り値	:	なし
+	//**************************************************************//
 	void changeAnimation(int type,byte direction){
 		switch (direction) {
 		case Key.DOWN:						// 下向き
@@ -221,9 +260,14 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	// アニメーション制御（コルーチン）
-	// 上下向きのアニメーションは、コルーチンで一定時間で反転をさせる事で表現する
-	// アニメーション画像を削減するための処理
+	//**************************************************************//
+	//	関数名　:	ManualAnimation
+	//	機能		:	アニメーション制御（コルーチン）
+	// 				上下向きのアニメーションは、コルーチンで一定時間で反転をさせる事で表現する
+	// 				アニメーション画像を削減するための処理
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	IEnumerator ManualAnimation(){
 		while (true) {
 			yield return new WaitForSeconds (.3f);				// アニメーションのフレームレート
@@ -232,7 +276,13 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	// 移動関数(switch)
+	//**************************************************************//
+	//	関数名　:	selectMoveDirection
+	//	機能		:	指定された方向に移動をする
+	//	引数		:	int direction	移動する投稿を受け取る
+	//				UP:1 RIGHT:2 DOWN:4 LEFT:8 UPRIGH:3 DOWNRIGHT:6 UPLEFT:9 DOWNLEFT:12
+	//	戻り値	:	なし
+	//**************************************************************//
 	void selectMoveDirection(int direction){
 		Vector3 move;				// 移動量を格納
 		switch (direction) {

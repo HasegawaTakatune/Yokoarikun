@@ -5,8 +5,12 @@ using Const;
 
 public class Enemy : MonoBehaviour,RecieveInterface{
 	//******************************************************************//
-	//								敵の制御								//
-	// 					移動制御・アニメーション制御						//
+	//	敵の制御	
+	// 	移動制御・アニメーション制御	
+	//
+	//	呼び出し関係図
+	//	Update	─┬─>Escape		─┬─>Game.IsItHard
+	//			 └─>ScrollEnd	 └─>LeadControl.RemoveAllCustomers
 	//******************************************************************//
 
 
@@ -28,12 +32,24 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 	[SerializeField]
 	SpriteRenderer spriteRenderer;		// スプライトレンダラ―格納
 
+	//**************************************************************//
+	//	関数名　:	Start
+	//	機能		:	プレイヤーの探索、移動基準の座標・移動量の初期化
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	void Start(){
 		player = GameObject.Find ("Player").transform;	// プレイヤー座標を初期化
 		position = transform.position;					// 基準座標の初期化
 		movement = direction * speed * Time.deltaTime;	// 移動量の初期化
 	}
 
+	//**************************************************************//
+	//	関数名　:	Update
+	//	機能		:	メインループ、難易度・移動パターン別に移動を制御する
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	void Update () {
 		if (!Game.stop && Game.start) {		// 停止していない・ゲームが稼働中の時
 			switch (Game.difficulty) {		// 難易度分岐
@@ -79,8 +95,12 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 		}
 	}
 
-
-	// 画面端まで到着したら
+	//**************************************************************//
+	//	関数名　:	ScrollEnd
+	//	機能		:	画面の端まで到着したら、次の行動ステータスを再設定する
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	void ScrollEnd(){
 		float y = 0;		// 次に出撃するy座標を設定
 		status = START;		// ステータスを始めに戻す
@@ -90,21 +110,31 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 		}
 		type = (Random.Range (0, 2));								// 行動パターンを再設定
 		direction = (Random.Range (0, 2)) == 0 ? 1 : -1;			// 移動方向を再設定
-		speed = Random.Range (1, 2) + (0.015f * Game.score);		// スピード　スコアによって速度が上がる
+		speed = Random.Range (1, 3) + (0.015f * Game.score);		// スピード　スコアによって速度が上がる
 		transform.position = new Vector3 (position.x * direction, position.y + y, position.z);	// 初期位置
 		spriteRenderer.flipX = (direction == 1) ? false : true;		// 向きの変換
 		movement = direction * speed * Time.deltaTime;				// 移動量の再設定
 		leadControl.RemoveAllCustomers ();							// 横取りしたキャラクターを全開放する
 	}
 
-	// キャラクターを横取りした時のメッセージ処理（受信）
+	//**************************************************************//
+	//	関数名　:	ISnatched
+	//	機能		:	キャラクターを横取りした時のメッセージ処理（受信）
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	public void ISnatched(){
 		status = EXIT;		// 逃げる行動に移る
 		speed = 3;			// 早足で逃げる
 		movement = direction * speed * Time.deltaTime;	// 移動量の再設定
 	}
-		
-	// 逃げる（コルーチン）
+
+	//**************************************************************//
+	//	関数名　:	Escape
+	//	機能		:	一定時間をおいて逃げる行動に移る（コルーチン）
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
 	IEnumerator Escape(){
 		yield return new WaitForSeconds (Random.Range (1, 3));	// 逃げ始めるタイミングを図る
 		status = EXIT;		// 逃げる行動に移る
