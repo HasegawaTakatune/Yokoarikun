@@ -10,8 +10,9 @@ public class GameCanvas : MonoBehaviour {
 	//	ゲームスタート・ゲームセット・タイムリミット・スコア・連れている人数
 	//
 	//	呼び出し関係図
-	//	Update	─┬─>CountDown	───>ClearStatusText
-	//			 └─>GameTimer	───>GameEnd
+	//	Start	─┬─>CountDown	───>ClearStatusText
+	//			 ├─>GameTimer	───>GameEnd
+	//			 └─>Update
 	//**********************************************************************//
 	[SerializeField]
 	Text TimeLimitText;		// タイムリミットテキスト

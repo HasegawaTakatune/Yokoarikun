@@ -10,11 +10,11 @@ public class Player : MonoBehaviour {
 	//	スタート/ゴール処理・誘導関数の呼び出し制御
 	//
 	//	呼び出し関係図
-	//	Start　───>ManualAnimation
-	//	Update ─┬─>MovementSettings			┌─>Alignment
-	//			├─>changeAnimation			├─>LeadControl.AddScore
-	//			├─>selectMoveDirection		├─>LeadControl.APositionIsInitialized
-	//			└─>ReturnToInitialPosition	┴─>LeadControl.AListIsInitialized
+	//	Start　─┬─>ManualAnimation
+	//			└─>Update	─┬─>MovementSettings		┌─>Alignment
+	//						 ├─>changeAnimation			├─>LeadControl.AddScore
+	//						 ├─>selectMoveDirection		├─>LeadControl.APositionIsInitialized
+	//						 └─>ReturnToInitialPosition	┴─>LeadControl.AListIsInitialized
 	//******************************************************************//
 	[SerializeField]
 	LeadControl leadControl;					// 誘導コンポーネントを参照

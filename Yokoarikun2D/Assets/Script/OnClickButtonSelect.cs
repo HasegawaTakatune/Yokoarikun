@@ -7,13 +7,21 @@ using Const;
 public class OnClickButtonSelect : OnClickButton {
 	//******************************************************************//
 	//	OnClickButton継承クラス
-	//	選択メニューボタンの表示・非表示の制御群
+	//	メニュー選択を制御するボタン関数群
+	//	難易度選択のメニューボタンを表示・非表示の制御する					OnClickRank/OnClickStart
+	//	ゲームを一時停止して、選択メニューを表示する							OnClickStop
+	//	選択メニューを非表示にして、一時停止をしたゲームを再開する			OnClickResume
+	//
+	//	呼び出し関係図
+	//	Start	───>base.Start
+	//	ランキングボタンをクリック	───>OnClickRank		─┬─>MoveToSelect
+	//	スタートボタンをクリック		───>OnClickStart	─┤
+	//	一時停止ボタンをクリック		───>OnClickStop		─┤
+	//	ゲーム再開ボタンをクリック	───>OnClickResume	─┴─>AStopIsReleased
 	//******************************************************************//
 
-	[SerializeField]
-	GameObject[] ToMakeItTransparent;	// 非表示にするボタンを格納
-	[SerializeField]
-	GameObject[] ToMakeItOpaque;		// 表示させるボタンを格納
+	[SerializeField] GameObject[] ToMakeItTransparent;	// 非表示にするボタンを格納
+	[SerializeField] GameObject[] ToMakeItOpaque;		// 表示させるボタンを格納
 
 	//**************************************************************//
 	//	関数名　:	Start

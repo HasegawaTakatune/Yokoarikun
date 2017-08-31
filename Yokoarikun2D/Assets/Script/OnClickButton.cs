@@ -7,13 +7,14 @@ public class OnClickButton : MonoBehaviour {
 	//******************************************************************//
 	//	OnClickButton系列の基底クラス
 	//	オーディオの制御・シーン移動制御を受け持つ
+	//
+	//	呼び出し関係図
+	//	Start
+	//	ボタンクリック	───>MoveToScene
 	//******************************************************************//
-	[SerializeField]
-	protected bool IChoose = false;	// 選択状態の管理　（true : 選択  false : 非選択）
-	[SerializeField]
-	protected AudioClip audioClip;		// オーディオクリップ保持
-	[SerializeField]
-	protected AudioSource audioSource;	// オーディオソース保持
+	[SerializeField] protected bool IChoose = false;	// 選択状態の管理　（true : 選択  false : 非選択）
+	[SerializeField] protected AudioClip audioClip;		// オーディオクリップ保持
+	[SerializeField] protected AudioSource audioSource;	// オーディオソース保持
 	// シーン名一覧
 	public enum SceneName
 	{
@@ -25,9 +26,8 @@ public class OnClickButton : MonoBehaviour {
 		Result,		// リザルト
 		Rank		// ランキング
 	}
-	protected static SceneName sceneName;	// シーン名保持
-	[SerializeField]
-	SceneName loadSceneName;			// インスタンスに表示する用のシーン名選択
+	protected static SceneName sceneName;				// シーン名保持
+	[SerializeField] SceneName loadSceneName;			// インスタンスに表示する用のシーン名選択
 
 	//**************************************************************//
 	//	関数名　:	Start

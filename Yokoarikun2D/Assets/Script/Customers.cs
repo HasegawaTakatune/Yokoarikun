@@ -9,9 +9,10 @@ public class Customers : MonoBehaviour {
 	//
 	//	呼び出し関係図
 	//	Start　─┬─>SetAnimator
-	//			└─>GenderDetermination
-	//	Update ─┬─>Move
-	//			└─>BreakTime
+	//			├─>GenderDetermination
+	//			└─>Update ─┬─>Move
+	//					   └─>BreakTime
+	//	当たり判定	───>OnCollisionEnter2D	───>LeadControl.Hit
 	//******************************************************************//
 	const byte OutsideTheArea=0,InArea=1,Break=2;				// 移動タイプ　(OutsideTheArea : エリア外の移動  InArea : エリア内移動)
 	byte moveStatus = 0;										// 移動タイプを格納
@@ -32,8 +33,7 @@ public class Customers : MonoBehaviour {
 
 	bool doOnce = false;										// 一度だけ実行
 
-	[SerializeField]
-	Animator animator;											// アニメーター格納
+	[SerializeField] Animator animator;							// アニメーター格納
 	static readonly int[] DOWN = new int[] {					// 下向きアニメーション
 		Animator.StringToHash ("CustomersSprite@Down"),			// 男の子_1
 		Animator.StringToHash ("CustomersBoySprite@Down"),		// 男の子_2
@@ -49,8 +49,7 @@ public class Customers : MonoBehaviour {
 		Animator.StringToHash ("CustomersBoySprite@Right"),		// 男の子_2
 		Animator.StringToHash ("CustomersGirlSprite@Right")		// 女の子_1
 	};
-	[SerializeField]
-	SpriteRenderer spriteRenderer;								// スプライトレンダラ格納
+	[SerializeField] SpriteRenderer spriteRenderer;				// スプライトレンダラ格納
 
 	//**************************************************************//
 	//	関数名　:	Start
@@ -194,7 +193,7 @@ public class Customers : MonoBehaviour {
 
 	//**************************************************************//
 	//	関数名　:	destroy
-	//	機能		:	外部参照用のオブジェクト削除
+	//	機能		:	オブジェクト削除をする。外部参照用
 	//	引数		:	なし
 	//	戻り値	:	なし
 	//**************************************************************//
@@ -214,7 +213,7 @@ public class Customers : MonoBehaviour {
 
 	//**************************************************************//
 	//	関数名　:	Position
-	//	機能		:	ポジションを設定する
+	//	機能		:	ポジションを設定する。外部参照用
 	//	引数		:	Vector3 value	座標を受け取る
 	//	戻り値	:	なし
 	//**************************************************************//

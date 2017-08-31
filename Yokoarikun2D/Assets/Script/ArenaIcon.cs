@@ -6,7 +6,8 @@ public class ArenaIcon : MonoBehaviour {
 	//	ゴールの位置を知らせるアイコン
 	//
 	//	呼び出し関係図
-	//	Start　───>Change
+	//	Start　─┬─>Change
+	//			└─>Update
 	//**************************************************************//
 	Vector2 pos;				// 現在の座標
 	Vector2 ScreenPos;			// スクリーン座標

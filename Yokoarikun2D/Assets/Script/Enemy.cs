@@ -9,28 +9,22 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 	// 	移動制御・アニメーション制御	
 	//
 	//	呼び出し関係図
-	//	Update	─┬─>Escape		─┬─>Game.IsItHard
-	//			 └─>ScrollEnd	 └─>LeadControl.RemoveAllCustomers
+	//	Start	───>Update	─┬─>Escape		─┬─>Game.IsItHard
+	//			 			 └─>ScrollEnd	 └─>LeadControl.RemoveAllCustomers
 	//******************************************************************//
 
 
-	[SerializeField]
-	LeadControl leadControl;			// 誘導コンポーネントを参照
-	Transform player;					// プレイヤー座標を参照
-	const byte START=0,STOP=1,EXIT=2;	// 行動ステータス
-	[SerializeField]
-	byte status = START; 				// 行動パターン
-	const int FEINT=0,RUN=1;			// 行動タイプ一覧
-	[SerializeField]
-	int type = FEINT;					// 行動タイプ
-	[SerializeField]
-	float speed = 1.0f;					// 移動速度
-	[SerializeField]
-	int direction = 1;					// 移動方向
-	Vector3 position;					// ステータス変更の基準座標を格納
-	float movement;						// 移動量を格納
-	[SerializeField]
-	SpriteRenderer spriteRenderer;		// スプライトレンダラ―格納
+	[SerializeField] LeadControl leadControl;			// 誘導コンポーネントを参照
+	Transform player;									// プレイヤー座標を参照
+	const byte START=0,STOP=1,EXIT=2;					// 行動ステータス
+	[SerializeField] byte status = START; 				// 行動パターン
+	const int FEINT=0,RUN=1;							// 行動タイプ一覧
+	[SerializeField] int type = FEINT;					// 行動タイプ
+	[SerializeField] float speed = 1.0f;				// 移動速度
+	[SerializeField] int direction = 1;					// 移動方向
+	Vector3 position;									// ステータス変更の基準座標を格納
+	float movement;										// 移動量を格納
+	[SerializeField] SpriteRenderer spriteRenderer;		// スプライトレンダラ―格納
 
 	//**************************************************************//
 	//	関数名　:	Start

@@ -7,11 +7,14 @@ using Const;
 public class OnClickButtonSceneManager : OnClickButton {
 	//******************************************************************//
 	//	OnClickButton継承クラス
-	//	メインゲーム・ランキングの難易度を選択するボタン	
+	//	メインゲーム・ランキングの難易度を選択して、シーン移動する。
+	//	ボタンクリック時の処理は、基底クラスのOnClickButtonを使っている。
+	//
+	//	呼び出し関係図
+	//	ボタンクリック	───>OnClickSceneManager	───>OnClick
 	//******************************************************************//
 
-	[SerializeField]
-	Game.Difficulty setDifficulty;	//	難易度を保持
+	[SerializeField] Game.Difficulty setDifficulty;	//	難易度を保持
 
 	//**************************************************************//
 	//	関数名　:	OnClickSceneManager
