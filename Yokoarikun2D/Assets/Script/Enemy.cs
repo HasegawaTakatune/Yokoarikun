@@ -9,8 +9,8 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 	// 	移動制御・アニメーション制御	
 	//
 	//	呼び出し関係図
-	//	Start	───>Update	─┬─>Escape		─┬─>Game.IsItHard
-	//			 			 └─>ScrollEnd	 └─>LeadControl.RemoveAllCustomers
+	//	Start	───>Update Move	─┬─>Escape		─┬─>Game.IsItHard
+	//			 			 	 └─>ScrollEnd	 └─>LeadControl.RemoveAllCustomers
 	//******************************************************************//
 
 
@@ -25,6 +25,8 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 	Vector3 position;									// ステータス変更の基準座標を格納
 	float movement;										// 移動量を格納
 	[SerializeField] SpriteRenderer spriteRenderer;		// スプライトレンダラ―格納
+	delegate void Delegate();							// delegate型の宣言
+	Delegate Move;										// 移動メソッドを格納する変数を宣言
 
 	//**************************************************************//
 	//	関数名　:	Start
@@ -36,6 +38,7 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 		player = GameObject.Find ("Player").transform;	// プレイヤー座標を初期化
 		position = transform.position;					// 基準座標の初期化
 		movement = direction * speed * Time.deltaTime;	// 移動量の初期化
+		Move += (Game.difficulty == Game.Difficulty.Normal) ? (Delegate)EasyMove : (Delegate)HardMove; // 移動メソッドを選択
 	}
 
 	//**************************************************************//
@@ -46,47 +49,55 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 	//**************************************************************//
 	void Update () {
 		if (!Game.stop && Game.start) {		// 停止していない・ゲームが稼働中の時
-			switch (Game.difficulty) {		// 難易度分岐
-			case Game.Difficulty.Normal:	// ノーマルモード
-				if (type == FEINT) {		// フェイント行動
-					switch (status) {		// ステータスで行動分岐
-					case START:				// 移動開始
-						transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
-						if (transform.position.x >= -1 || transform.position.x >= 1) {	// 指定座標に到達した時
-							status = STOP;						// 一時停止をさせる
-							StartCoroutine (Escape ());			// ステータスを逃げるに変更する関数
-						}
-						break;
+			Move();							// 移動関数の呼び出し
+		}
+	}
 
-					case STOP:				// 一時停止（何もしない）
-						break;
-
-					case EXIT:									// 退出
-						transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
-						if (transform.position.x >= -position.x || transform.position.x <= position.x)	// フレームアウトした時
-							ScrollEnd ();						// ステータスを再設定する関数
-						break;
-					}
-			
-				} else if (type == RUN) {					// 走る行動
-					transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
-					if (transform.position.x >= -position.x || transform.position.x <= position.x)		// フレームアウトした時
-						ScrollEnd ();						// ステータスを再設定する関数
+	//**************************************************************//
+	//	関数名　:	EasyMove
+	//	機能		:	イージーモードの行動パターン、移動途中に一時停止するモノと
+	//				まっすぐに移動するパターンを用意してある
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
+	void EasyMove(){
+		if (type == FEINT) {		// フェイント行動
+			switch (status) {		// ステータスで行動分岐
+			case START:				// 移動開始
+				transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
+				if (transform.position.x >= -1 || transform.position.x >= 1) {	// 指定座標に到達した時
+					status = STOP;						// 一時停止をさせる
+					StartCoroutine (Escape ());			// ステータスを逃げるに変更する関数
 				}
 				break;
-	
-			case Game.Difficulty.Hard:	// ハードモード
-				transform.position += new Vector3 (movement,(player.position.y - transform.position.y) * 0.002f,0);	// プレイヤーを追尾
-				if (transform.position.x >= -position.x || transform.position.x <= position.x)						// フレームアウトした時 
-					ScrollEnd ();		// ステータスを再設定する関数
+
+			case STOP:				// 一時停止（何もしない）
 				break;
 
-			default:
-			//Debug.Log ("Errer : difficulty");
+			case EXIT:									// 退出
+				transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
+				if (transform.position.x >= -position.x || transform.position.x <= position.x)	// フレームアウトした時
+					ScrollEnd ();						// ステータスを再設定する関数
 				break;
-
 			}
+
+		} else if (type == RUN) {					// 走る行動
+			transform.Translate (movement, 0, 0);	// 移動量の分だけ移動する
+			if (transform.position.x >= -position.x || transform.position.x <= position.x)		// フレームアウトした時
+				ScrollEnd ();						// ステータスを再設定する関数
 		}
+	}
+
+	//**************************************************************//
+	//	関数名　:	HardMove
+	//	機能		:	ハードモードの行動パターン、プレイヤーに追尾ずる
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
+	void HardMove(){
+		transform.position += new Vector3 (movement,(player.position.y - transform.position.y) * 0.002f,0);	// プレイヤーを追尾
+		if (transform.position.x >= -position.x || transform.position.x <= position.x)						// フレームアウトした時 
+			ScrollEnd ();		// ステータスを再設定する関数
 	}
 
 	//**************************************************************//
