@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Const;
-
+using UnityEngine.UI;
 public class Player : MonoBehaviour {
 	//******************************************************************//
 	//	プレイヤー制御
@@ -65,6 +65,8 @@ public class Player : MonoBehaviour {
 
 	public const float speed = 0.05f;	// 移動速度
 
+	[SerializeField]Text text;
+
 	//**************************************************************//
 	//	関数名　:	Start
 	//	機能		:	プラットホーム設定、スコア・移動量の初期化、手動アニメーション制御開始
@@ -113,15 +115,27 @@ public class Player : MonoBehaviour {
 				if (platform == Platform.Android) {			// Androidの時
 					if (Input.touchCount > 0) {				// タッチがされた時
 						foreach (Touch t in Input.touches) {
-							if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled)	// タッチが続行されている間
-								touchPosition = Camera.main.ScreenToWorldPoint (t.position);	// 画面上でタッチした位置を格納
-							else
+							if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled){	// タッチが続行されている間
+								touchPosition = t.position;
+								touchPosition.z = 10f;
+								touchPosition = Camera.main.ScreenToWorldPoint (touchPosition);	// 画面上でタッチした位置を格納
+								text.text = touchPosition.ToString();
+							}else
 								touchPosition = nowPosition;									// タッチされない限り、同じ座標を維持
 						}
 					} else
 						touchPosition = nowPosition;		// タッチされない限り、同じ座標を維持
 
-					if ((nowPosition.y) < (touchPosition.y - addPos)) {		// タッチした座標の近くにいなければ
+					Vector3 pos = ((touchPosition - transform.position).normalized) * .04f;
+					if(touchPosition != nowPosition){
+						transform.position += pos;
+						//transform.position = touchPosition;
+						text.text = pos.ToString("F3");
+					//float angle = Mathf.Atan2 (transform.position.y - touchPosition.y, transform.position.x - touchPosition.x);	// ゴールの方向を計算する
+					//transform.position += new Vector3 (-Mathf.Cos (angle), -Mathf.Sin (angle), 0) * speed;	// ゴールまで移動をする
+					}
+					direc = (pos.x > 0.03f) ? Key.RIGHT : (pos.x < -0.03f) ? Key.LEFT : (pos.y <= 0) ? Key.DOWN : Key.UP;
+					/*if ((nowPosition.y) < (touchPosition.y - addPos)) {		// タッチした座標の近くにいなければ
 						if (nowPosition.y < startPos.y - 1.1f) 				// ステージの範囲内であれば
 							MovementSettings (Key.UP);						// 上に移動の設定をする
 					}
@@ -135,9 +149,15 @@ public class Player : MonoBehaviour {
 					if ((nowPosition.x) < (touchPosition.x - addPos)) {		// タッチした座標の近くにいなければ
 						if (nowPosition.x < RightFrame)						// ステージの範囲内であれば
 							MovementSettings (Key.RIGHT);					// 右に移動の設定をする
-					}
+					}*/
 				} else if (platform == Platform.UnityEditor || platform == Platform.Windows) {	// Unityエディター・Windowsの時
-					if (Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) {		// 上キーが押されたら
+					const float Speed = .04f;
+					float horizontal = Input.GetAxis ("Horizontal") * Speed;
+					float vertical = Input.GetAxis ("Vertical") * Speed;
+					transform.Translate (horizontal, vertical, 0);
+					direc = (horizontal > 0) ? Key.RIGHT : (horizontal < 0) ? Key.LEFT : (vertical <= 0) ? Key.DOWN : Key.UP;
+
+					/*if (Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) {		// 上キーが押されたら
 						if (nowPosition.y < startPos.y - 1.1f) 								// ステージの範囲内であれば 
 							MovementSettings (Key.UP);										// 上に移動の設定をする 
 					}
@@ -151,11 +171,11 @@ public class Player : MonoBehaviour {
 					if (Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) {	// 左キーが押されたら
 						if (nowPosition.x < RightFrame) 									// ステージの範囲内であれば
 							MovementSettings (Key.RIGHT);									// 左に移動の設定をする
-					}
+					}*/
 				}
 
 				changeAnimation (type, direc);			// アニメーション制御関数
-				selectMoveDirection (moveDirecResult);	// 移動制御関数
+				//selectMoveDirection (moveDirecResult);	// 移動制御関数
 				leadControl.direction = direc;			// 誘導するキャラの向きを設定
 			}
 
@@ -167,7 +187,7 @@ public class Player : MonoBehaviour {
 				if (Vector3.Distance (nowPosition, endPos) >= 0.5f) {// ゴールと同じ座標になるまで
 					float angle;	// 移動方向を格納
 					angle = Mathf.Atan2 (endPos.y - nowPosition.y, endPos.x - nowPosition.x);				// ゴールの方向を計算する
-					transform.position += new Vector3 (Mathf.Cos (angle), Mathf.Sin (angle), 0) * speed;	// ゴールまで移動をする
+					transform.position += new Vector3 (Mathf.Cos (angle), -Mathf.Sin (angle), 0) * speed;	// ゴールまで移動をする
 				}
 				direc = Key.DOWN;	// 下を向かせる
 			}
