@@ -107,9 +107,9 @@ public class Customers : MonoBehaviour {
 
 				case OutsideTheArea:									// エリア外移動
 					if (transform.position.x >= 2)						// 右端に到達した時
-						transform.position += movePosResult [6];		// 左に移動
+						transform.position += Vector3.left*speed;//movePosResult [6];		// 左に移動
 					else if (transform.position.x <= -2)				// 左端に到達した時
-						transform.position += movePosResult [2];		// 右に移動
+						transform.position += Vector3.right*speed;//movePosResult [2];		// 右に移動
 					else
 						moveStatus = InArea;							// 移動ステータスをエリア内に変更
 					break;

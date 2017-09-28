@@ -11,17 +11,13 @@ public class Player : MonoBehaviour {
 	//
 	//	呼び出し関係図
 	//	Start　─┬─>ManualAnimation
-	//			└─>Update	─┬─>MovementSettings		┌─>Alignment
+	//			└─>Update	─┬─>Move					┌─>Alignment
 	//						 ├─>changeAnimation			├─>LeadControl.AddScore
-	//						 ├─>selectMoveDirection		├─>LeadControl.APositionIsInitialized
+	//						 │							├─>LeadControl.APositionIsInitialized
 	//						 └─>ReturnToInitialPosition	┴─>LeadControl.AListIsInitialized
 	//******************************************************************//
-	[SerializeField]
-	LeadControl leadControl;					// 誘導コンポーネントを参照
+	[SerializeField]LeadControl leadControl;	// 誘導コンポーネントを参照
 	byte platform = 0;							// プラットフォームの格納
-
-	Vector3 touchPosition;						// タッチした座標
-	Vector3 nowPosition;						// 現在の座標
 
 	const float addPos = 0.1f;					// タッチした座標の有効幅
 
@@ -30,19 +26,13 @@ public class Player : MonoBehaviour {
 
 	const int NORMAL=0,BOXER=1,GUITAR=2;		// キャラクタータイプ一覧 (ノーマル・ボクサー・ギター)
 
-	int moveDirecResult = 0;					// 移動方向を格納
-	Vector3[] movePosiResult = new Vector3[8];	// 8方向の移動量を格納
-
-	[SerializeField]
-	Transform StartPosition;			// 始めの座標
-	[SerializeField]
-	Transform EndPosition;				// 終わりの座標
+	[SerializeField]Transform StartPosition;	// 始めの座標
+	[SerializeField]Transform EndPosition;		// 終わりの座標
 	Vector3 startPos,endPos;			// 座標だけを格納する
 
 	bool AddScore  = false;				// スコア加算の制御  (true : スコア処理をした  false : スコア処理をしていない)
 
-	[SerializeField]
-	Animator animator;					// アニメーター格納
+	[SerializeField]Animator animator;	// アニメーター格納
 	static readonly int[] Up = new int[] {		// 上向きアニメーション
 		Animator.StringToHash ("PlayerSprite@Up"),			// 通常
 		Animator.StringToHash ("PlayerBoxerSprite@Up"),		// ボクサー
@@ -58,14 +48,14 @@ public class Player : MonoBehaviour {
 		Animator.StringToHash ("PlayerBoxerSprite@Left"),	// ボクサー
 		Animator.StringToHash ("PlayerGuitarSprite@Left")	// ギター
 	};
-	[SerializeField]
-	SpriteRenderer spriteRenderer;		// スプライトレンダラ―格納
+	[SerializeField]SpriteRenderer spriteRenderer;			// スプライトレンダラ―格納
 	byte type = NORMAL;					// キャラクタータイプ格納
 	byte direc = 0;						// キャラクターの方向を格納
 
-	public const float speed = 0.05f;	// 移動速度
+	const float speed = 0.05f;			// 移動速度
 
-	[SerializeField]Text text;
+	delegate void Delegate();			// delegate型の宣言
+	Delegate Move;						// 移動メソッドを格納する変数を宣言
 
 	//**************************************************************//
 	//	関数名　:	Start
@@ -74,27 +64,12 @@ public class Player : MonoBehaviour {
 	//	戻り値	:	なし
 	//**************************************************************//
 	void Start () {
-		// 今使っているプラットフォーム
-		if (Application.platform == RuntimePlatform.WindowsEditor) {		// Unityエディター
-			platform = Platform.UnityEditor;
-		} else if (Application.platform == RuntimePlatform.WindowsPlayer) { // Windows
-			platform = Platform.Windows;
-		} else if (Application.platform == RuntimePlatform.Android) {		// Android
-			platform = Platform.Android;
-		} else {															// どのプラットフォームでもなかった時
-			platform = Platform.None;
-		}
+		// プラットフォーム別に移動関数を登録する
+		Move += (Application.platform == RuntimePlatform.Android) ? (Delegate)AndroidControl : (Delegate)PcControl;
 
 		Game.score = 0;							// スコアの初期化
 		startPos = StartPosition.position;		// スタート位置の初期化
 		endPos = EndPosition.position;			// ゴール座標の初期化
-
-		int i = 0;
-		while (movePosiResult.Length != i) {	// 8方向の移動量を計算しておく
-			movePosiResult [i] = new Vector3 (Mathf.Sin ((transform.localEulerAngles.y + 45 * i) * 3.14f / 180) * speed * (720 / Screen.width), 
-				Mathf.Cos ((transform.localEulerAngles.y + 45 * i) * 3.14f / 180) * speed * (1280 / Screen.height), 0);
-			i++;
-		}
 
 		StartCoroutine (ManualAnimation ());	// アニメーション制御関数
 	}
@@ -107,78 +82,17 @@ public class Player : MonoBehaviour {
 	//	戻り値	:	なし
 	//**************************************************************//
 	void Update () {
-		if (!Game.stop) {									// ポーズ状態じゃない時
-			nowPosition = gameObject.transform.position;	// 現在の座標を更新
+		if (!Game.stop) {								// ポーズ状態じゃない時
 
 			// 移動
-			if (Game.start) {								// ゲーム開始
-				if (platform == Platform.Android) {			// Androidの時
-					if (Input.touchCount > 0) {				// タッチがされた時
-						foreach (Touch t in Input.touches) {
-							if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled){	// タッチが続行されている間
-								touchPosition = t.position;
-								touchPosition.z = 10f;
-								touchPosition = Camera.main.ScreenToWorldPoint (touchPosition);	// 画面上でタッチした位置を格納
-								text.text = touchPosition.ToString();
-							}else
-								touchPosition = nowPosition;									// タッチされない限り、同じ座標を維持
-						}
-					} else
-						touchPosition = nowPosition;		// タッチされない限り、同じ座標を維持
-
-					Vector3 pos = ((touchPosition - transform.position).normalized) * .04f;
-					if(touchPosition != nowPosition){
-						transform.position += pos;
-						//transform.position = touchPosition;
-						text.text = pos.ToString("F3");
-					//float angle = Mathf.Atan2 (transform.position.y - touchPosition.y, transform.position.x - touchPosition.x);	// ゴールの方向を計算する
-					//transform.position += new Vector3 (-Mathf.Cos (angle), -Mathf.Sin (angle), 0) * speed;	// ゴールまで移動をする
-					}
-					direc = (pos.x > 0.03f) ? Key.RIGHT : (pos.x < -0.03f) ? Key.LEFT : (pos.y <= 0) ? Key.DOWN : Key.UP;
-					/*if ((nowPosition.y) < (touchPosition.y - addPos)) {		// タッチした座標の近くにいなければ
-						if (nowPosition.y < startPos.y - 1.1f) 				// ステージの範囲内であれば
-							MovementSettings (Key.UP);						// 上に移動の設定をする
-					}
-					if ((nowPosition.y) > (touchPosition.y + addPos)) 		// タッチした座標の近くにいなければ
-						MovementSettings (Key.DOWN);						// 下に移動の設定をする
-					
-					if ((nowPosition.x) > (touchPosition.x + addPos)) {		// タッチした座標の近くにいなければ
-						if (nowPosition.x > LeftFrame) 						// ステージの範囲内であれば
-							MovementSettings (Key.LEFT);					// 左に移動の設定をする
-					}
-					if ((nowPosition.x) < (touchPosition.x - addPos)) {		// タッチした座標の近くにいなければ
-						if (nowPosition.x < RightFrame)						// ステージの範囲内であれば
-							MovementSettings (Key.RIGHT);					// 右に移動の設定をする
-					}*/
-				} else if (platform == Platform.UnityEditor || platform == Platform.Windows) {	// Unityエディター・Windowsの時
-					const float Speed = .04f;
-					float horizontal = Input.GetAxis ("Horizontal") * Speed;
-					float vertical = Input.GetAxis ("Vertical") * Speed;
-					transform.Translate (horizontal, vertical, 0);
-					direc = (horizontal > 0) ? Key.RIGHT : (horizontal < 0) ? Key.LEFT : (vertical <= 0) ? Key.DOWN : Key.UP;
-
-					/*if (Input.GetKey (KeyCode.W) || Input.GetKey (KeyCode.UpArrow)) {		// 上キーが押されたら
-						if (nowPosition.y < startPos.y - 1.1f) 								// ステージの範囲内であれば 
-							MovementSettings (Key.UP);										// 上に移動の設定をする 
-					}
-					if (Input.GetKey (KeyCode.S) || Input.GetKey (KeyCode.DownArrow)) 		// 下キーが押されたら
-						MovementSettings (Key.DOWN);										// 下に移動の設定をする
-					
-					if (Input.GetKey (KeyCode.A) || Input.GetKey (KeyCode.LeftArrow)) {		// 右キーが押されたら
-						if (nowPosition.x > LeftFrame) 										// ステージの範囲内であれば
-							MovementSettings (Key.LEFT);									// 右に移動の設定をする
-					}
-					if (Input.GetKey (KeyCode.D) || Input.GetKey (KeyCode.RightArrow)) {	// 左キーが押されたら
-						if (nowPosition.x < RightFrame) 									// ステージの範囲内であれば
-							MovementSettings (Key.RIGHT);									// 左に移動の設定をする
-					}*/
-				}
+			if (Game.start) {							// ゲーム開始
+				Move();									// 移動関数
 
 				changeAnimation (type, direc);			// アニメーション制御関数
-				//selectMoveDirection (moveDirecResult);	// 移動制御関数
 				leadControl.direction = direc;			// 誘導するキャラの向きを設定
 			}
 
+			Vector3 nowPosition = gameObject.transform.position;	// 現在の座標を更新
 			if (endPos.y >= nowPosition.y) {						// ゴール近くまで到達したら
 				if (!AddScore) 										// スコアが加算されていなければ
 					StartCoroutine (ReturnToInitialPosition ());	// ゴール後の初期化などの処理群
@@ -193,7 +107,7 @@ public class Player : MonoBehaviour {
 			}
 
 			if (startPos.y - 1 <= nowPosition.y) {			// ゲームステージに入場する処理
-				transform.position += movePosiResult [4];	// ステージに入場するまで下移動をする
+				transform.position += Vector3.down * speed;	// ステージに入場するまで下移動をする
 				direc = Key.DOWN;							// 下を向く
 				AddScore = false;							// スコア加算フラグの初期化
 			}
@@ -213,9 +127,46 @@ public class Player : MonoBehaviour {
 		yield return new WaitForSeconds (1);					// ゴールに入り込む待ち時間
 		transform.position = startPos;							// 座標をスタート地点に設定
 		Alignment ();											// キャラクターのタイプ変更
-		touchPosition = new Vector3 (nowPosition.x, -10, 0);	// タッチ座標の初期化
 		leadControl.APositionIsInitialized (startPos);			// 誘導するキャラクターの座標初期化
 		leadControl.AListIsInitialized (5);						// 誘導するキャラクターの誘導人数を初期化
+	}
+
+	//**************************************************************//
+	//	関数名　:	AndroidControl
+	//	機能		:	プラットフォームがAndroidの時の制御処理
+	//				タッチ座標とキャラ座標の差分で移動量を計算して移動する
+	//				移動量から向きを決める
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
+	void AndroidControl(){
+		if (Input.touchCount > 0) {	// タッチがされた時
+			foreach (Touch t in Input.touches) {
+				if (t.phase != TouchPhase.Ended && t.phase != TouchPhase.Canceled) {// タッチが続行されている間
+					Vector3 touchPosition = t.position;								// タッチポジションに代入
+					touchPosition.z = 10f;											// タッチ座標で奥行は取れないので、変えを代入
+					touchPosition = Camera.main.ScreenToWorldPoint (touchPosition);	// 画面上でタッチした位置を格納
+					Vector3 pos = ((touchPosition - transform.position).normalized) * speed;	// キャラ座標とタッチ座標の差分を移動量に変換する
+					transform.position += pos;													// 変換した移動量を加算する
+					direc = (pos.x > 0.03f) ? Key.RIGHT : (pos.x < -0.03f) ? Key.LEFT : (pos.y <= 0) ? Key.DOWN : Key.UP; // 移動量から向く方向を決める
+				}
+			}
+		}
+	}
+
+	//**************************************************************//
+	//	関数名　:	PcControl
+	//	機能		:	プラットフォームがPCの時の移動処理
+	//				キー入力の戻り値を直接移動量として使う
+	//				移動量から向きを決める
+	//	引数		:	なし
+	//	戻り値	:	なし
+	//**************************************************************//
+	void PcControl(){
+		float horizontal = Input.GetAxis ("Horizontal") * speed;					// 水平入力を移動量に変換
+		float vertical = Input.GetAxis ("Vertical") * speed;						// 垂直入力を移動量に変換
+		transform.Translate (horizontal, vertical, 0);								// 移動量を加算する
+		direc = (horizontal > 0) ? Key.RIGHT : (horizontal < 0) ? Key.LEFT : (vertical <= 0) ? Key.DOWN : Key.UP; // 移動量から向く方向を決める
 	}
 
 	//**************************************************************//
@@ -232,17 +183,6 @@ public class Player : MonoBehaviour {
 		case GUITAR:type = NORMAL;break;	// ギター　　→　ノーマル
 		}
 		animator.Play (Down [type]);		// 下向きのアニメーションを再生
-	}
-
-	//**************************************************************//
-	//	関数名　:	MovementSettings
-	//	機能		:	移動方向・アニメーションの向きを設定
-	//	引数		:	byte key	向きを受け取る	UP:1 RIGHT:2 DOWN:4 LEFT:8
-	//	戻り値	:	なし
-	//**************************************************************//
-	void MovementSettings(byte key){
-		moveDirecResult += key;		// 移動方向の設定
-		direc = key;				// アニメーションの向きを設定
 	}
 
 	//**************************************************************//
@@ -294,30 +234,6 @@ public class Player : MonoBehaviour {
 			if (direc == Key.UP || direc == Key.DOWN)			// アニメーションが上・下向きの時
 				spriteRenderer.flipX = !spriteRenderer.flipX;	// 画像を反転させる
 		}
-	}
-
-	//**************************************************************//
-	//	関数名　:	selectMoveDirection
-	//	機能		:	指定された方向に移動をする
-	//	引数		:	int direction	移動する投稿を受け取る
-	//				UP:1 RIGHT:2 DOWN:4 LEFT:8 UPRIGH:3 DOWNRIGHT:6 UPLEFT:9 DOWNLEFT:12
-	//	戻り値	:	なし
-	//**************************************************************//
-	void selectMoveDirection(int direction){
-		Vector3 move;				// 移動量を格納
-		switch (direction) {
-		case Key.UP:		move = movePosiResult [0];break;	// ↑に移動
-		case Key.UPRIGHT:	move = movePosiResult [1];break;	// ↗に移動
-		case Key.RIGHT:		move = movePosiResult [2];break;	// →に移動
-		case Key.DOWNRIGHT:	move = movePosiResult [3];break;	// ↘に移動
-		case Key.DOWN:		move = movePosiResult [4];break;	// ↓に移動
-		case Key.DOWNLEFT:	move = movePosiResult [5];break;	// ↙に移動
-		case Key.LEFT:		move = movePosiResult [6];break;	// ←に移動
-		case Key.UPLEFT:	move = movePosiResult [7];break;	// ↖に移動
-		default:			move = Vector3.zero;	  break;	// それ以外、移動量を０にする
-		}
-		transform.position += move;	// 移動
-		moveDirecResult = 0;		// 移動方向の初期化
 	}
 
 

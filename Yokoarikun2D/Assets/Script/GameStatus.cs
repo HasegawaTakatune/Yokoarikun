@@ -88,16 +88,7 @@ namespace Const{
 		UPLEFT = 9,			// ↖
 		DOWNLEFT = 12;		// ↙
 	}
-
-	//プラットフォーム
-	public static class Platform{
-		public const byte
-		UnityEditor	= 0,	// Unityエディター
-		Windows		= 1,	// Windows
-		Android		= 2,	// Android
-		None		= 4;	// なし
-	}
-
+		
 	//ゲームステータス
 	public static class Game{
 		public static bool stop;	// ストップ（true : 停止  false : 稼働）

@@ -9,8 +9,8 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 	// 	移動制御・アニメーション制御	
 	//
 	//	呼び出し関係図
-	//	Start	───>Update Move	─┬─>Escape		─┬─>Game.IsItHard
-	//			 			 	 └─>ScrollEnd	 └─>LeadControl.RemoveAllCustomers
+	//	Start	───>Update ───>Move	─┬─>Escape		─┬─>Game.IsItHard
+	//			 			 		 └─>ScrollEnd	 └─>LeadControl.RemoveAllCustomers
 	//******************************************************************//
 
 
