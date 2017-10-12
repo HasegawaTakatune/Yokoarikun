@@ -115,7 +115,7 @@ public class Enemy : MonoBehaviour,RecieveInterface{
 		}
 		type = (Random.Range (0, 2));								// 行動パターンを再設定
 		direction = (Random.Range (0, 2)) == 0 ? 1 : -1;			// 移動方向を再設定
-		speed = Random.Range (1, 3) + (0.015f * Game.score);		// スピード　スコアによって速度が上がる
+		speed = Random.Range (1, 2) + (0.015f * Game.score);		// スピード　スコアによって速度が上がる
 		transform.position = new Vector3 (position.x * direction, position.y + y, position.z);	// 初期位置
 		spriteRenderer.flipX = (direction == 1) ? false : true;		// 向きの変換
 		movement = direction * speed * Time.deltaTime;				// 移動量の再設定

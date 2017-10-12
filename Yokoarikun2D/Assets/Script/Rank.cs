@@ -71,14 +71,14 @@ public class Rank : MonoBehaviour {
 		PlayerRank.gameObject.SetActive (false);			// プレイヤーランクを非表示
 		for (int index = 0; index < ScoreArray.Length; index++) {
 			Ranking [index].text = (index + 1).ToString () + "  " + ScoreArray [index].ToString () + "人";	// ランク・スコア表示
-			if (ScoreArray [index] == myScore && doOnce) {	// ランクインしてる場合
+			if (ScoreArray [index] <= myScore && doOnce) {	// ランクインしてる場合
 				PlayerRank.transform.position = (Ranking [index].transform.position + Vector3.right * 200);	// テキスト位置を設定
 				PlayerRank.gameObject.SetActive (true);		// ランクインテキストを表示
 				Ranking [3].gameObject.SetActive (false);	// ランク外テキストを非表示
 				doOnce = false;								// 1度だけ実行
 			}
 		}
-		Ranking [3].text = "あなた " + (Game.score).ToString () + "人";	// ランク外の表示
+		Ranking [3].text = "あなた " + myScore.ToString () + "人";	// ランク外の表示
 	}
 
 

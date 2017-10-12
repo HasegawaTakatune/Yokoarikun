@@ -165,6 +165,10 @@ public class Player : MonoBehaviour {
 	void PcControl(){
 		float horizontal = Input.GetAxis ("Horizontal") * speed;					// 水平入力を移動量に変換
 		float vertical = Input.GetAxis ("Vertical") * speed;						// 垂直入力を移動量に変換
+		if(horizontal != 0 && vertical != 0){
+			horizontal = horizontal / 1.4f;
+			vertical = vertical / 1.4f;
+		}
 		transform.Translate (horizontal, vertical, 0);								// 移動量を加算する
 		direc = (horizontal > 0) ? Key.RIGHT : (horizontal < 0) ? Key.LEFT : (vertical <= 0) ? Key.DOWN : Key.UP; // 移動量から向く方向を決める
 	}

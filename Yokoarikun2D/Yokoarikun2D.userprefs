@@ -2,8 +2,9 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Script\StableAspect.cs">
     <Files>
-      <File FileName="Assets\Script\GameStatus.cs" Line="124" Column="3" />
-      <File FileName="Assets\Script\StableAspect.cs" Line="14" Column="4" />
+      <File FileName="Assets\Script\Rank.cs" Line="34" Column="4" />
+      <File FileName="Assets\Script\GameStatus.cs" Line="1" Column="1" />
+      <File FileName="Assets\Script\StableAspect.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
